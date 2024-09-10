@@ -22,4 +22,4 @@ docker build -t front-facilitaai
 docker run -p 8080:8080 
 ```
 ### Acesse 
-[text](http://localhost:8080.)
+[http://localhost:8080](http://localhost:8080)
