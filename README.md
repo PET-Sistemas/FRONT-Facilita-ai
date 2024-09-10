@@ -10,15 +10,16 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+## Docker
+
+### Contrua a imagem do docker
 ```
-npm run build
+docker build -t front-facilitaai 
 ```
 
-### Lints and fixes files
+### Inicie o contêiner
 ```
-npm run lint
+docker run -p 8080:8080 
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Acesse 
+[text](http://localhost:8080.)
