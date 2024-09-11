@@ -15,7 +15,7 @@
             </div>
             <div class="phone-field">
               <label for="phone">Telefone</label>
-              <input type="text" id="phone" placeholder="" v-model="phone" />
+              <input type="text" id="phone" placeholder="" v-model="phone" v-mask="'+55 (##) #####-####'" />
             </div>
           </div>
   
@@ -86,10 +86,17 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      name: '',
+      birthdate: '',
+      phone: '',
+      selectedState: '',
+      selectedCity: '',
+      email: '',
+      password: '',
+      confirmation: '',
+      sellProduct: false,
       states: [], // Lista de estados
-      cities: [], // Lista de cidades
-      selectedState: '', // Estado selecionado
-      selectedCity: ''   // Cidade selecionada
+      cities: []   // Lista de cidades
     };
   },
   mounted() {
