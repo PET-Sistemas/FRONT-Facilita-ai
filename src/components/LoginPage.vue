@@ -30,12 +30,15 @@ import { RouterLink } from 'vue-router';
 
 
 <style scoped>
+body {
+  margin: 0 !important;
+}
 .login-container {
   width: calc(100% - 60px); 
   max-width: 600px; 
   height: calc(100% - 282px); 
   max-height: 550px; 
-  margin: 141px auto; 
+  margin: auto; 
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: white;

@@ -19,28 +19,31 @@ export default {
 </script>
 
 <style scoped>
+
+html, body, #app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 .main-div {
   display: flex;
   flex-direction: row;
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box; 
+  height: 100%;
+  width: 100%;
   overflow: hidden;
 }
 
 .bem-vindo {
   flex: 0 0 55vw; 
   height: 100%;
-  margin: 0;
 }
-
 
 .login-page {
   flex: 0 0 45vw; 
   height: 100%;
-  margin-top: 13vw;
 }
 
 @media screen and (max-width: 600px) {
@@ -50,7 +53,7 @@ export default {
 
   .login-page {
     width: 100%;
-    margin: 0;
+    margin-top: 0;
   }
 }
 </style>
