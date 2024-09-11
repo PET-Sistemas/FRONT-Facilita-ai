@@ -46,7 +46,7 @@
                   </div>
                 <center><div class="button-sign">
                         <router-link to="/badge" >
-                            <button id="button-sign2">ENTRAR</button>
+                            <button id="button-sign2">CADASTRAR</button>
                         </router-link>
                 </div></center>
                 <div class="login_text">
@@ -75,14 +75,14 @@
 
 .form-check-label{
     margin-top: 1.7rem !important;
-    margin-right: 2.5rem !important;
+    margin-right: 4.5rem !important;
     font-size: 1.3em !important;    
 }
 
 .form-check-input{ 
-    margin-top: 2rem !important;
-    margin-left: 0.5rem !important;
-    margin-right: 1.5rem !important;
+    margin-top: 1.7rem !important;
+    margin-left: 3.5rem !important;
+    margin-right: 0.5rem !important;
     font-size: 1.3em !important;
     background-color: rgba(206, 206, 206, 1);
 }
@@ -102,99 +102,102 @@
     box-shadow: none;
 }
 
-.container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .container {
+        margin-top: 50px;
+        margin-bottom: 10px;
+        margin-right: 150px;
+        margin-left: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.blue-side {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100vh;
-    background: linear-gradient(
-    to left bottom,
-    #024A59 0%,
-    #024A59 0%,
-    #024A59 0%,
-    #024A59 0%,
-    #024A59 0%,
-    #024A59 35%,
-    #024A59 49%,
-    #024A59 54%,
-    #067057 86%,
-    #068852 100%,
-    #348a09 100%,
-    #9e940c 100%,
-    #F2E206 100%
-  ) ;
-  }
+    .blue-side {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100vh;
+        background: linear-gradient(
+        to left bottom,
+        #024A59 0%,
+        #024A59 0%,
+        #024A59 0%,
+        #024A59 0%,
+        #024A59 0%,
+        #024A59 35%,
+        #024A59 49%,
+        #024A59 54%,
+        #067057 86%,
+        #068852 100%,
+        #348a09 100%,
+        #9e940c 100%,
+        #F2E206 100%
+    ) ;
+    }
 
-.full-forms{
-    overflow-y: scroll;
-    width: 80%;
-    height: 85vh;
-    border-radius: 20px;
-    box-shadow: 10px 10px 25px 0px rgba(0, 0, 0, 0.5);
-    font-family: 'Crete Round';
-		background-color: white;
-}
-#title{
-    margin-left: 2.5rem;
-    margin-top: 3.5rem;
-    margin-right:2.5rem;
-    margin-bottom: 1rem;
-    font-size: 2.3em;
-}
-.email-field{
-    margin-top: 2rem;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
-    color: #3E3E3E;
-    font-size: 1.3em;   
-}
+    .full-forms{
+        overflow-y: scroll;
+        width: 90%;
+        height: 90vh;
+        border-radius: 20px;
+        box-shadow: 10px 10px 25px 0px rgba(0, 0, 0, 0.5);
+        font-family: 'Crete Round';
+            background-color: white;
+    }
+    #title{
+        margin-left: 3.5rem;
+        margin-top: 2.5rem;
+        margin-right:2.5rem;
+        margin-bottom: 1rem;
+        font-size: 2.3em;
+        font-weight: bold;
+    }
+    .email-field{
+        margin-top: 1.3rem;
+        margin-left: 3.5rem;
+        margin-right: 5.5rem;
+        color: #3E3E3E;
+        font-size: 1.2em;   
+    }
 
-.double-field{
-    width: 100% !important;
-    display: flex !important;
-}
+    .double-field{
+        width: 100% !important;
+        display: flex !important;
+    }
 
-.data-field{
-    margin-top: 2rem !important; 
-    margin-left: 2.5rem !important;
-    margin-right: 2.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;  
-}
+    .data-field{
+        margin-top: 1.3rem !important; 
+        margin-left: 3.5rem !important;
+        margin-right: 5.5rem !important;
+        color: #3E3E3E !important;
+        font-size: 1.3em !important;  
+    }
 
-.state-field{
-    margin-top: 2rem !important; 
-    margin-left: 2.5rem !important;
-    margin-right: 2.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;   
-}
+    .state-field{
+        margin-top: 1.3rem !important; 
+        margin-left: 3.5rem !important;
+        margin-right: 5.5rem !important;
+        color: #3E3E3E !important;
+        font-size: 1.3em !important;   
+    }
 
-.phone-field{
-    margin-top: 2rem !important; 
-    margin-left: 2.5rem !important;
-    margin-right: 2.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;   
-}
+    .phone-field{
+        margin-top: 1.3rem !important; 
+        margin-left: 3.5rem !important;
+        margin-right: 5.5rem !important;
+        color: #3E3E3E !important;
+        font-size: 1.3em !important;   
+    }
 
-.city-field{
-    margin-top: 2rem !important; 
-    margin-left: 2.5rem !important;
-    margin-right: 2.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;    
-}
+    .city-field{
+        margin-top: 1.3rem !important; 
+        margin-left: 3.5rem !important;
+        margin-right: 5.5rem !important;
+        color: #3E3E3E !important;
+        font-size: 1.3em !important;    
+    }
 
 .phone{
     display: block !important;
@@ -253,7 +256,7 @@
     margin-top: 0.5rem;
     padding: 0.25rem;
     height: 3.5rem;
-    width: 100%;
+    width: 90%;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
@@ -262,9 +265,9 @@
 }
 
 .name-field{
-    margin-top: 2rem;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
+    margin-top: 1.3rem;
+    margin-left: 3.5rem;
+    margin-right: 5.5rem;
     color: #3E3E3E;
     font-size: 1.3em;   
 }
@@ -274,7 +277,7 @@
     margin-top: 0.5rem;
     padding: 0.25rem;
     height: 3.5rem;
-    width: 100%;
+    width: 90%;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
@@ -284,9 +287,9 @@
 
 .password-field{
     position: relative;
-    margin-top: 1.7rem;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
+    margin-top: 1.3rem;
+    margin-left: 3.5rem;
+    margin-right: 2rem;
     border-radius: 10px;
     color: #3E3E3E;
     font-size: 1.3em;
@@ -296,7 +299,7 @@
     display: block;
     margin-top: 0.4rem;
     padding: 0.25rem;
-    width: 26.9rem;
+    width: 22rem;
     height: 3.5rem;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
@@ -307,9 +310,9 @@
 
 .confirmation{
     position: relative;
-    margin-top: 1.7rem;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
+    margin-top: 1.3rem;
+    margin-left: 3.5rem;
+    margin-right: 7.5rem;
     border-radius: 10px;
     color: #3E3E3E;
     font-size: 1.3em;
@@ -343,9 +346,9 @@ a:visited{
 }
 
 .button-sign{
-    margin-left: 2.5rem;
+    margin-left: 3.5rem;
     margin-top: 1.5rem;
-    margin-right: 2.5rem;
+    margin-right: 5.5rem;
     border: none;
 }
 

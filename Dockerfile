@@ -9,6 +9,8 @@ COPY package*.json ./
 
 # Instale as dependências
 RUN npm install
+RUN npm install -g @vue/cli
+RUN npm install axios
 
 # Copie o restante da aplicação
 COPY . .
