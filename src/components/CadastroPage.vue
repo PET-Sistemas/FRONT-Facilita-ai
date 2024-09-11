@@ -256,7 +256,7 @@
     margin-top: 0.5rem;
     padding: 0.25rem;
     height: 3.5rem;
-    width: 100%;
+    width: 90%;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
@@ -277,7 +277,7 @@
     margin-top: 0.5rem;
     padding: 0.25rem;
     height: 3.5rem;
-    width: 100%;
+    width: 90%;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
@@ -299,7 +299,7 @@
     display: block;
     margin-top: 0.4rem;
     padding: 0.25rem;
-    width: 24.9rem;
+    width: 22rem;
     height: 3.5rem;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
