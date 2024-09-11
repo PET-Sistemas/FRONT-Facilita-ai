@@ -1,72 +1,123 @@
 <template>
     <div class="blue-side">
-        <div class="container">
-            <div class="full-forms">
-                <div id="title">Cadastrar</div>
-                <div class="name-field">
-                    <label for="name">Nome completo</label>
-                    <input type="name" id="name"  placeholder=""/>
-                </div>
-                
-                <div class="double-field">
-                    <div class="data-field">Data de nascimento
-                        <input type="date" name="datanascimento" class="data" id="datanascimento" placeholder="Data de Nascimento" required>
-                    </div>
-                    <div class="phone-field">
-                        <label for="phone">Telefone</label>
-                        <input type="phone" class="phone" id="phone"  placeholder=""/>
-                    </div>
-                </div>
-                <div class="double-field">
-                    <div class="state-field"> Estado
-                        <select id="state" class="state"><option value="">Selecione um estado</option></select>
-                    </div>
-                    <div class="city-field"> Cidade
-                        <select id="city" class="city"><option value="">Selecione uma cidade</option></select>
-                    </div>
-                </div>
-
-                <div class="email-field">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email"  placeholder=""/>
-                </div>
-                <div class="double-field">
-                    <div class="password-field">
-                        <label for="password">Senha</label>
-                        <input type="password"  id="password" placeholder="">
-                    </div>
-                    <div class="confirmation">
-                        <label for="confirmation">Confirmar senha</label>
-                        <input type="confirmation"  id="confirmation" placeholder="">
-                    </div>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">Vender produto</label>
-                  </div>
-                <center><div class="button-sign">
-                        <router-link to="/badge" >
-                            <button id="button-sign2">CADASTRAR</button>
-                        </router-link>
-                </div></center>
-                <div class="login_text">
-                    Já possui conta?
-                    <router-link to="/" class="login_link">
-                        Entre
-                    </router-link>
-                </div>
+      <div class="container">
+        <div class="full-forms">
+          <div id="title">Cadastrar</div>
+          <div class="name-field">
+            <label for="name">Nome completo</label>
+            <input type="text" id="name" placeholder="" v-model="name" />
+          </div>
+  
+          <div class="double-field">
+            <div class="data-field">
+              <label for="datanascimento">Data de nascimento</label>
+              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="birthdate">
             </div>
+            <div class="phone-field">
+              <label for="phone">Telefone</label>
+              <input type="text" id="phone" placeholder="" v-model="phone" />
+            </div>
+          </div>
+  
+          <div class="double-field">
+            <div class="state-field">
+              <label for="state">Estado</label>
+              <select id="state" class="state" v-model="selectedState" @change="fetchCities">
+                <option value="">Selecione um estado</option>
+                <option v-for="state in states" :key="state.sigla" :value="state.sigla">
+                  {{ state.nome }}
+                </option>
+              </select>
+            </div>
+            <div class="city-field">
+              <label for="city">Cidade</label>
+              <select id="city" class="city" v-model="selectedCity">
+                <option value="">Selecione uma cidade</option>
+                <option v-for="city in cities" :key="city.nome" :value="city.nome">
+                  {{ city.nome }}
+                </option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="email-field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="" v-model="email" />
+          </div>
+  
+          <div class="double-field">
+            <div class="password-field">
+              <label for="password">Senha</label>
+              <input type="password" id="password" placeholder="" v-model="password" />
+            </div>
+            <div class="confirmation">
+              <label for="confirmation">Confirmar senha</label>
+              <input type="password" id="confirmation" placeholder="" v-model="confirmation" />
+            </div>
+          </div>
+  
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="sellProduct" />
+            <label class="form-check-label" for="flexSwitchCheckDefault">Vender produto</label>
+          </div>
+  
+          <div class="button-sign">
+            <router-link to="/badge">
+              <button id="button-sign2">CADASTRAR</button>
+            </router-link>
+          </div>
+  
+          <div class="login_text">
+            Já possui conta?
+            <router-link to="/" class="login_link">Entre</router-link>
+          </div>
         </div>
+      </div>
     </div>
-</template>
+  </template>
+  
+
 
 
 
 <script>
+import axios from 'axios';
 
-    export default{
-        name: "sign_up",
+export default {
+  data() {
+    return {
+      states: [], // Lista de estados
+      cities: [], // Lista de cidades
+      selectedState: '', // Estado selecionado
+      selectedCity: ''   // Cidade selecionada
+    };
+  },
+  mounted() {
+    this.fetchStates(); // Carrega os estados ao montar o componente
+  },
+  methods: {
+    // Busca os estados
+    async fetchStates() {
+      try {
+        const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+        this.states = response.data;
+      } catch (error) {
+        console.error('Erro ao buscar estados:', error);
+      }
+    },
+    // Busca as cidades com base no estado selecionado
+    async fetchCities() {
+      try {
+        if (this.selectedState) {
+          const response = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.selectedState}/municipios`);
+          this.cities = response.data;
+        }
+      } catch (error) {
+        console.error('Erro ao buscar cidades:', error);
+      }
     }
+  }
+};
 
 </script>
 
@@ -102,24 +153,24 @@
     box-shadow: none;
 }
 
-    .container {
-        margin-top: 50px;
-        margin-bottom: 10px;
-        margin-right: 150px;
-        margin-left: 150px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.container {
+    margin-top: 50px;
+    margin-bottom: 10px;
+    margin-right: 15%;
+    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .blue-side {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        height: 100vh;
-        background: linear-gradient(
+.blue-side {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    background: linear-gradient(
         to left bottom,
         #024A59 0%,
         #024A59 0%,
@@ -134,70 +185,72 @@
         #348a09 100%,
         #9e940c 100%,
         #F2E206 100%
-    ) ;
-    }
+    );
+}
 
-    .full-forms{
-        overflow-y: scroll;
-        width: 90%;
-        height: 90vh;
-        border-radius: 20px;
-        box-shadow: 10px 10px 25px 0px rgba(0, 0, 0, 0.5);
-        font-family: 'Crete Round';
-            background-color: white;
-    }
-    #title{
-        margin-left: 3.5rem;
-        margin-top: 2.5rem;
-        margin-right:2.5rem;
-        margin-bottom: 1rem;
-        font-size: 2.3em;
-        font-weight: bold;
-    }
-    .email-field{
-        margin-top: 1.3rem;
-        margin-left: 3.5rem;
-        margin-right: 5.5rem;
-        color: #3E3E3E;
-        font-size: 1.2em;   
-    }
+.full-forms{
+    overflow-y: scroll;
+    width: 90%;
+    height: 90vh;
+    border-radius: 20px;
+    box-shadow: 10px 10px 25px 0px rgba(0, 0, 0, 0.5);
+    font-family: 'Crete Round';
+    background-color: white;
+}
 
-    .double-field{
-        width: 100% !important;
-        display: flex !important;
-    }
+#title{
+    margin-left: 3.5rem;
+    margin-top: 2.5rem;
+    margin-right:2.5rem;
+    margin-bottom: 1rem;
+    font-size: 2.3em;
+    font-weight: bold;
+}
 
-    .data-field{
-        margin-top: 1.3rem !important; 
-        margin-left: 3.5rem !important;
-        margin-right: 5.5rem !important;
-        color: #3E3E3E !important;
-        font-size: 1.3em !important;  
-    }
+.email-field{
+    margin-top: 1.3rem;
+    margin-left: 3.5rem;
+    margin-right: 5.5rem;
+    color: #3E3E3E;
+    font-size: 1.2em;   
+}
 
-    .state-field{
-        margin-top: 1.3rem !important; 
-        margin-left: 3.5rem !important;
-        margin-right: 5.5rem !important;
-        color: #3E3E3E !important;
-        font-size: 1.3em !important;   
-    }
+.double-field{
+    width: 100% !important;
+    display: flex !important;
+}
 
-    .phone-field{
-        margin-top: 1.3rem !important; 
-        margin-left: 3.5rem !important;
-        margin-right: 5.5rem !important;
-        color: #3E3E3E !important;
-        font-size: 1.3em !important;   
-    }
+.data-field{
+    margin-top: 1.3rem !important; 
+    margin-left: 3.5rem !important;
+    margin-right: 5.5rem !important;
+    color: #3E3E3E !important;
+    font-size: 1.3em !important;  
+}
 
-    .city-field{
-        margin-top: 1.3rem !important; 
-        margin-left: 3.5rem !important;
-        margin-right: 5.5rem !important;
-        color: #3E3E3E !important;
-        font-size: 1.3em !important;    
-    }
+.state-field{
+    margin-top: 1.3rem !important; 
+    margin-left: 3.5rem ;
+    margin-right: 5.5rem !important;
+    color: #3E3E3E !important;
+    font-size: 1.3em !important;   
+}
+
+.phone-field{
+    margin-top: 1.3rem !important; 
+    margin-left: 3.5rem !important;
+    margin-right: 5.5rem !important;
+    color: #3E3E3E !important;
+    font-size: 1.3em !important;   
+}
+
+.city-field{
+    margin-top: 1.3rem !important; 
+    margin-left: 3.5rem !important;
+    margin-right: 5.5rem !important;
+    color: #3E3E3E !important;
+    font-size: 1.3em !important;    
+}
 
 .phone{
     display: block !important;
@@ -239,7 +292,7 @@
 }
 
 .data{
-    display: block !important;
+    display: block;
     margin-top: 0.5rem !important;
     padding: 0.25rem !important;
     height: 3.5rem !important;
@@ -256,7 +309,7 @@
     margin-top: 0.5rem;
     padding: 0.25rem;
     height: 3.5rem;
-    width: 90%;
+    width: 100%;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
@@ -265,7 +318,7 @@
 }
 
 .name-field{
-    margin-top: 1.3rem;
+    margin-top: 3.3rem;
     margin-left: 3.5rem;
     margin-right: 5.5rem;
     color: #3E3E3E;
@@ -277,7 +330,7 @@
     margin-top: 0.5rem;
     padding: 0.25rem;
     height: 3.5rem;
-    width: 90%;
+    width: 100%;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
@@ -289,7 +342,7 @@
     position: relative;
     margin-top: 1.3rem;
     margin-left: 3.5rem;
-    margin-right: 2rem;
+    margin-right: 2.5%;
     border-radius: 10px;
     color: #3E3E3E;
     font-size: 1.3em;
@@ -297,7 +350,7 @@
 
 #password{
     display: block;
-    margin-top: 0.4rem;
+    margin-top: 0.3em;
     padding: 0.25rem;
     width: 22rem;
     height: 3.5rem;
@@ -322,13 +375,12 @@
     display: block;
     margin-top: 0.4rem;
     padding: 0.25rem;
-    width: 26.9rem;
+    width: 22rem;
     height: 3.5rem;
     border-radius: 10px;
     border: 0.1rem solid #C0C0C0;
     box-sizing: border-box;
     background-color: #FFF ;
-    font-size: 0.9em;
 }
 
 a{
@@ -336,25 +388,19 @@ a{
     color: #1570EF;
     margin-top: 5.7rem;
     font-family: 'Inter';
-    
-
 }
 
 a:visited{
     color: #1570EF;
-    
 }
 
 .button-sign{
-    margin-left: 3.5rem;
-    margin-top: 1.5rem;
-    margin-right: 5.5rem;
-    border: none;
+    justify-content: center;
 }
 
 #button-sign2{
     width: 50%;
-    margin-top: 1.7rem;
+    margin-top: 2.5em;
     padding: 0.25rem;
     background-color: #F26530;
     height: 3.2rem;
@@ -362,61 +408,129 @@ a:visited{
     color: #FFF;
     font-weight: bold;
     font-size: 1.5em;
-    cursor:pointer;
+    cursor: pointer;
     border: none;
-    
 }
 
 .login_text{
-    margin-top: 1rem;
-    margin-left: 4.5rem;
-    margin-right: 4.5rem;
-    margin-bottom: 1rem;
+    margin-top: 4rem;
+    font-family: 'Crete Round';
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #3E3E3E;
     text-align: center;
-    color: #5C5B5B;
-    font-family: 'Inter';
 }
 
-.login_link{
-    color:#1570EF;
+.select2-container--default .select2-selection--single {
+    background-color: #FFF;
+    border: 0.1rem solid #C0C0C0;
+    border-radius: 10px;
+    height: 3.5rem;
+    box-shadow: none;
+    font-size: 0.9em;
+    margin-top: 0.5rem;
+    margin-left: 3.5rem;
+    margin-right: 5.5rem;
 }
 
-#forgot-password{
+footer {
+    margin-top: 2em;
+    padding: 1em;
+    background-color: #024A59;
+    color: white;
+    font-family: 'Crete Round';
+    font-size: 0.9em;
+    text-align: center;
+}
+
+footer a {
+    color: white;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+#password_icon{
     position: absolute;
-    color: #1570EF;
-    text-decoration: none;
-    right: 0;
-    font-family: 'Inter';
-    font-size: 1rem;
+    right: 1.25rem;
+    top: 4.35rem;
+    cursor: pointer;
 }
 
-@media screen and (min-width: 1024px) and (max-width: 1440px){
-    .full-forms{
-        position: absolute;
-        top: 30%;
-        left: 20%;
-        width: 60%;
-        height: 35hv;
-    }
-}
-@media screen and (min-width: 600px) and (max-width: 1000px){
-    .full-forms{
-        position: absolute;
-        top: 25%;
-        left: 20%;
-        width: 60%;
-        height: 50hv;
-    }
+#password_icon_confirmation{
+    position: absolute;
+    right: 1.25rem;
+    top: 4.35rem;
+    cursor: pointer;
 }
 
-@media screen and (max-width: 500px){
-    .full-forms{
-        position: absolute;
-        z-index: 100;
-        top: 30%;
-        width: 100%;
-        height: 70hv;
-        border-radius: 10px 10px 0 0;
-    }
+#file-directory {
+    display: inline-block;
+    margin-left: 3.5rem;
+    margin-top: 1.3rem;
+    font-size: 1.2em;
+    color: #3E3E3E;
 }
+
+#file-button {
+    display: inline-block;
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #F26530;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#generate-button {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.75rem 2rem;
+    background-color: #F26530;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+
+#digit-size {
+    display: inline-block;
+    width: 3rem;
+    margin-left: 3.5rem;
+    margin-top: 1.3rem;
+    padding: 0.25rem;
+    border-radius: 5px;
+    border: 0.1rem solid #C0C0C0;
+    box-sizing: border-box;
+    background-color: #FFF;
+}
+
+#filter-options {
+    display: inline-block;
+    margin-left: 1rem;
+    margin-top: 1.3rem;
+}
+
+#status-message {
+    display: block;
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 1.2em;
+    color: #3E3E3E;
+}
+
+#file-size-input {
+    display: inline-block;
+    margin-left: 1rem;
+    width: 3rem;
+    padding: 0.25rem;
+    border-radius: 5px;
+    border: 0.1rem solid #C0C0C0;
+    box-sizing: border-box;
+    background-color: #FFF;
+}
+
 </style>
