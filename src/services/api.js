@@ -1,10 +1,14 @@
+// src/api.js
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8080', // URL do seu back-end Spring Boot
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const API_URL = 'http://localhost:8080'; // Substitua pelo URL do seu back-end
 
-export default api;
+export const login = async (email, password) => {
+    try {
+        const response = await axios.post(`${API_URL}/login`, { email, password });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        throw error;
+    }
+};

@@ -60,7 +60,7 @@ body {
   position: absolute;
   bottom: 30px;
   left: 30px;
-  font-family: 'Junge', sans-serif;
+  font-family: 'crete round', serif;
   font-size: 3.5em;
   line-height: 1em;
   color: white;

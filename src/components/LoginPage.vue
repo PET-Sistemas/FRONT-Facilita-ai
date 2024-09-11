@@ -1,24 +1,41 @@
 <script setup>
 import { RouterLink } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { login } from '../services/api';
+
+const email = ref('');
+const password = ref('');
+const router = useRouter();
+
+const handleLogin = async () => {
+    try {
+        const result = await login(email.value, password.value);
+        // Armazene o token ou dados do usuário conforme necessário
+        router.push('/badge'); // Redirecione para outra página após o login
+    } catch (error) {
+        console.error('Falha no login:', error);
+        // Mostre uma mensagem de erro para o usuário
+    }
+};
 </script>
+
 <template>
   <div class="login-container">
     <div id="title">Entrar</div>
     <div class="email-field">
       <label for="email">Email</label>
-      <input type="email" id="email" placeholder=" "/>
+      <input type="email" id="email" v-model="email" placeholder=" "/>
     </div>
-    <div class="password-field">
+    <div class = "password-field">
       <label for="password">Senha</label>
-      <input type="password" id="password" placeholder="">
+      <input type="password" id="password" v-model="password" placeholder="">
       <RouterLink to="/recover">
         <a id="forgot-password" href="/">Esqueci a senha</a>
       </RouterLink>
     </div>
     <div class="button-login">
-      <RouterLink to="/badge">
-        <button id="button-login2">ENTRAR</button>
-      </RouterLink>
+      <button id="button-login2" @click="handleLogin">ENTRAR</button>
     </div>
     <div class="signup_text">
       Não possui uma conta?
@@ -26,6 +43,11 @@ import { RouterLink } from 'vue-router';
     </div>
   </div>
 </template>
+
+<script>
+
+
+</script>
 
 
 
@@ -54,6 +76,7 @@ body {
   margin-bottom: 1em;
   margin-top: 1.8em;
   margin-left: 0.5em;
+  font-family: 'crete round', serif;
 }
 
 .email-field, .password-field {
@@ -61,6 +84,8 @@ body {
   max-width: 500px; 
   margin-bottom: 1em;
   margin-left: 0.5em;
+  font-family: 'crete round', serif;
+  font-size: 1rem;
 }
 
 .email-field label, .password-field label {
@@ -101,7 +126,8 @@ input[type="email"], input[type="password"] {
 .signup_text {
   margin-top: 1.2em;
   text-align: center;
-  font-size: 1.15em;
+  font-size: 1em;
+  font-family: 'inter', sans-serif;
 }
 
 .signup_link {
@@ -118,6 +144,7 @@ input[type="email"], input[type="password"] {
   text-decoration: none;
   margin-top: 2rem;
   margin-left: 0.5em;
+  font-family: 'inter', sans-serif;
 }
 
 @media (max-width: 600px) {
