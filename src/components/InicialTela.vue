@@ -65,6 +65,7 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 10px 20px;
+    height: 7rem;
     background: linear-gradient(
             to left,
             #024A59 0%,
@@ -77,6 +78,8 @@ export default {
             #024A59 42%,
             #067057 100%,
             #068852 100%
+
+    
     );
 }
 
@@ -153,6 +156,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative
 }
 
 .address-edit input {
@@ -162,6 +166,7 @@ export default {
   font-size: 1rem;
   margin-bottom: 10px;
   max-width: 400px;
+  position: absolute;
 }
 
   </style>
