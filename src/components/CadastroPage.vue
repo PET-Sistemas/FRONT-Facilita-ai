@@ -63,7 +63,7 @@
           </div>
   
           <div class="button-sign">
-            <router-link to="/badge">
+            <router-link to="/">
               <button id="button-sign2">CADASTRAR</button>
             </router-link>
           </div>
@@ -85,44 +85,76 @@
 import axios from 'axios';
 
 export default {
-  data() {
-    return {
-      name: '',
-      birthdate: '',
-      phone: '',
-      selectedState: '',
-      selectedCity: '',
-      email: '',
-      password: '',
-      confirmation: '',
-      sellProduct: false,
-      states: [],
-      cities: [] 
-    };
-  },
-  mounted() {
-    this.fetchStates(); 
-  },
-  methods: {
-    async fetchStates() {
-      try {
-        const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-        this.states = response.data;
-      } catch (error) {
-        console.error('Erro ao buscar estados:', error);
-      }
+    data() {
+        return {
+            name: '',
+            birthdate: '',
+            phone: '',
+            selectedState: '',
+            selectedCity: '',
+            email: '',
+            password: '',
+            confirmation: '',
+            sellProduct: false,
+            states: [],
+            cities: [] 
+        };
     },
-    async fetchCities() {
-      try {
-        if (this.selectedState) {
-          const response = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.selectedState}/municipios`);
-          this.cities = response.data;
+    mounted() {
+        this.fetchStates(); 
+    },
+    methods: {
+        async fetchStates() {
+            try {
+                const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+                this.states = response.data;
+            } catch (error) {
+                console.error('Erro ao buscar estados:', error);
+            }
+        },
+        async fetchCities() {
+            try {
+                if (this.selectedState) {
+                    const response = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.selectedState}/municipios`);
+                    this.cities = response.data;
+                }
+            } catch (error) {
+                console.error('Erro ao buscar cidades:', error);
+            }
+        },
+        async submitForm() {
+            if (this.password !== this.confirmation) {
+                alert('As senhas não coincidem.');
+                return;
+            }
+
+            try {
+                const userData = {
+                    name: this.name,
+                    birthdate: this.birthdate,
+                    phone: this.phone,
+                    state: this.selectedState,
+                    city: this.selectedCity,
+                    email: this.email,
+                    password: this.password,
+                    confirmation: this.confirmation,
+                    sellProduct: this.sellProduct
+                };
+
+                console.log('dados:', userData);
+
+                // Substitua a URL abaixo pela URL do backend
+                const response = await axios.post('https://api.seusite.com/cadastrar', userData);
+
+                if (response.status === 200) {
+                    alert('Cadastro realizado com sucesso!');
+                }
+            } catch (error) {
+                console.error('Erro ao cadastrar usuário:', error);
+                alert('Ocorreu um erro ao cadastrar o usuário.');
+            }
         }
-      } catch (error) {
-        console.error('Erro ao buscar cidades:', error);
-      }
     }
-  }
 };
 
 </script>
