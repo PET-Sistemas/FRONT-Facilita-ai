@@ -1,12 +1,13 @@
 <template>
-  <div id="app">
-    <RouterView />
-  </div>
+  <TestForm />
 </template>
 
-<script setup>
-import { RouterView } from 'vue-router';
-</script>
+<script>
+import TestForm from './components/TestForm.vue';
 
-<style>
-</style>
+export default {
+  components: {
+    TestForm
+  }
+};
+</script>
