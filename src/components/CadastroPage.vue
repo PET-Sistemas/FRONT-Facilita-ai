@@ -11,19 +11,20 @@
           <div class="double-field">
             <div class="data-field">
               <label for="datanascimento">Data de nascimento</label>
-              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="birthdate">
+              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="birthdate" placeholder="DD/MM/AAAA">
             </div>
+        
             <div class="phone-field">
               <label for="phone">Telefone</label>
-              <input type="text" id="phone" placeholder="" v-model="phone" v-mask="'+55 (##) #####-####'" />
+              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" />
             </div>
-          </div>
+        </div>
   
           <div class="double-field">
             <div class="state-field">
               <label for="state">Estado</label>
               <select id="state" class="state" v-model="selectedState" @change="fetchCities">
-                <option value="">Selecione um estado</option>
+                <option value="">UF</option>
                 <option v-for="state in states" :key="state.sigla" :value="state.sigla">
                   {{ state.nome }}
                 </option>
@@ -32,7 +33,7 @@
             <div class="city-field">
               <label for="city">Cidade</label>
               <select id="city" class="city" v-model="selectedCity">
-                <option value="">Selecione uma cidade</option>
+                <option value="">Cidade</option>
                 <option v-for="city in cities" :key="city.nome" :value="city.nome">
                   {{ city.nome }}
                 </option>
@@ -68,8 +69,8 @@
           </div>
   
           <div class="login_text">
-            Já possui conta?
-            <router-link to="/" class="login_link">Entre</router-link>
+            Já possui uma conta?
+            <router-link to="/" class="login_link">Entrar</router-link>
           </div>
         </div>
       </div>
@@ -95,15 +96,14 @@ export default {
       password: '',
       confirmation: '',
       sellProduct: false,
-      states: [], // Lista de estados
-      cities: []   // Lista de cidades
+      states: [],
+      cities: [] 
     };
   },
   mounted() {
-    this.fetchStates(); // Carrega os estados ao montar o componente
+    this.fetchStates(); 
   },
   methods: {
-    // Busca os estados
     async fetchStates() {
       try {
         const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
@@ -112,7 +112,6 @@ export default {
         console.error('Erro ao buscar estados:', error);
       }
     },
-    // Busca as cidades com base no estado selecionado
     async fetchCities() {
       try {
         if (this.selectedState) {
@@ -131,33 +130,53 @@ export default {
 
 <style scoped>
 
-.form-check-label{
-    margin-top: 1.7rem !important;
-    margin-right: 4.5rem !important;
-    font-size: 1.3em !important;    
+input::placeholder {
+  color: #999;
+}
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-top: 1.7rem !important;
+  margin-right: 4.5rem !important;
 }
 
-.form-check-input{ 
-    margin-top: 1.7rem !important;
-    margin-left: 3.5rem !important;
-    margin-right: 0.5rem !important;
-    font-size: 1.3em !important;
-    background-color: rgba(206, 206, 206, 1);
+.form-check-label {
+  font-size: 1.3em !important;
+  margin-right: 1rem;
+}
+
+.form-check-input {
+  width: 3.5rem;
+  height: 1.75rem;
+  background-color: rgba(206, 206, 206, 1);
+  border-radius: 1rem;
+  position: relative;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 6.5%;
+  margin-right: 1em;
 }
 
 .form-check-input:checked {
-    background-color: rgba(242, 101, 48, 1);
-    border-color: white;
+  background-color: rgba(242, 101, 48, 1);
 }
 
-.form-check-input:focus {
-    border-color: white;
-    box-shadow: none;
+.form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
 }
 
-.form-check-input:hover {
-    border-color: white;
-    box-shadow: none;
+.form-check-input:checked::before {
+  transform: translateX(1.75rem);
 }
 
 .container {
@@ -244,6 +263,8 @@ export default {
 }
 
 .phone-field{
+    display: flex !important;
+    flex-direction: column !important;
     margin-top: 1.3rem !important; 
     margin-left: 3.5rem !important;
     margin-right: 5.5rem !important;
@@ -271,6 +292,21 @@ export default {
     background-color: #FFF !important;
     font-size: 0.9em !important;
 }
+
+.phone-input {
+  width: 80%;
+  padding: 0.25rem !important;
+  height: 3.5rem !important;
+  border-radius: 10px !important;
+  border: 0.1rem solid #C0C0C0 !important;
+  box-sizing: border-box !important;
+  background-color: #FFF !important;
+  font-size: 0.9em !important;
+}
+.phone-input::placeholder {
+    color: #888;
+}
+
 
 .state{
     display: block !important;
@@ -401,13 +437,15 @@ a:visited{
     color: #1570EF;
 }
 
-.button-sign{
-    justify-content: center;
+
+.button-sign2{
+    align-items: center;
 }
 
 #button-sign2{
     width: 50%;
     margin-top: 2.5em;
+    margin-left:25%;
     padding: 0.25rem;
     background-color: #F26530;
     height: 3.2rem;
@@ -419,13 +457,14 @@ a:visited{
     border: none;
 }
 
-.login_text{
-    margin-top: 4rem;
-    font-family: 'Crete Round';
-    font-size: 1.3em;
-    font-weight: bold;
+
+.login_text, a{
+    margin-top: 0.5rem;
+    font-family: 'Inter';
+    font-size: 1.1em;
     color: #3E3E3E;
     text-align: center;
+    margin-bottom: 3%;
 }
 
 .select2-container--default .select2-selection--single {
@@ -481,9 +520,7 @@ footer a:hover {
 }
 
 #file-button {
-    display: inline-block;
-    margin-left: 1rem;
-    padding: 0.5rem 1rem;
+    margin: auto;
     background-color: #F26530;
     color: white;
     border: none;
