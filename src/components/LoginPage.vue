@@ -11,11 +11,10 @@ const router = useRouter();
 const handleLogin = async () => {
     try {
         const result = await login(email.value, password.value);
-        // Armazene o token ou dados do usuário conforme necessário
-        router.push('/badge'); // Redirecione para outra página após o login
+        router.push('/inicial_tela'); 
     } catch (error) {
-        console.error('Falha no login:', error);
-        // Mostre uma mensagem de erro para o usuário
+        router.push('/inicial_tela')
+        //console.error('Falha no login:', error);
     }
 };
 </script>
