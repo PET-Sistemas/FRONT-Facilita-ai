@@ -33,11 +33,27 @@
     <div class="filter-section">
       <!-- Filtro por Tipo de Serviço -->
       <div class="filter-container">
-        <h3>Tipo de Serviço</h3>
-        <select v-model="serviceType">
-          <option value="">Todos</option>
-          <option value="beleza">Beleza</option>
-        </select>
+        <h3>TIPO DE SERVIÇO</h3>
+        <div>
+          <label>
+        <input type="checkbox" value="limpeza" v-model="selectedServices"> Limpeza
+          </label>
+          <label>
+        <input type="checkbox" value="construcao" v-model="selectedServices"> Construção
+          </label>
+          <label>
+        <input type="checkbox" value="manutencao" v-model="selectedServices"> Manutenção
+          </label>
+          <label>
+        <input type="checkbox" value="eletrica" v-model="selectedServices"> Elétrica
+          </label>
+          <label>
+        <input type="checkbox" value="hidraulica" v-model="selectedServices"> Hidráulica
+          </label>
+          <label>
+        <input type="checkbox" value="pintura" v-model="selectedServices"> Estética
+          </label>
+        </div>
       </div>
 
       <!-- Filtro por Distância -->
