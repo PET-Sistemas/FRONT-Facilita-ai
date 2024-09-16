@@ -29,6 +29,39 @@
       </svg>
     </div>
   </header>
+  <nav class="sidebar">
+    <div class="filter-section">
+      <div class="filter-container">
+        <h3>Tipo de Serviço</h3>
+        <select v-model="serviceType">
+          <option value="">Todos</option>
+          <option value="beleza">Beleza</option>
+        </select>
+      </div>
+      
+      <div class="filter-container">
+        <h3>Distância {{ distance }} km</h3>
+        <input
+        type="range"
+        v-model="distance"
+        min="0"
+        max="50"
+        step="1"
+        />
+    </div>
+
+    <div class="filter-container">
+      <h3>Preço R$ {{ price }}</h3>
+      <input
+        type="range"
+        v-model="price"
+        min="0"
+        max="3000"
+        step="50"
+      >
+    </div>
+    </div>
+  </nav>
   </template>
   
   <script>
@@ -37,10 +70,30 @@ export default {
     return {
       address: 'Endereço Atual', 
       newAddress: '', 
-      isEditing: false 
+      isEditing: false,
+      serviceType: '',
+      distance: 25,
+      price: 500
     };
   },
+  watch: {
+    serviceType(){
+      this.filterResults();
+    },
+    distance(){
+      this.filterResults();
+    },
+    price(){
+      this.filterResults();
+    }
+  },
   methods: {
+    filterResults(){
+      console.log('Filtrando por:', this.serviceType, this.distance, this.price);
+    },
+    formatPrice(price){
+      return price.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+    },
     toggleEdit() {
       this.isEditing = !this.isEditing;
       if (this.isEditing) {
@@ -167,6 +220,83 @@ export default {
   margin-bottom: 10px;
   max-width: 400px;
   position: absolute;
+}
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre os filtros */
+}
+
+.filter-container {
+  background-color: #ffffff; /* Fundo branco para cada container */
+  padding: 15px; /* Espaçamento interno do container */
+  border-radius: 8px; /* Cantos arredondados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter-container h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.filter-container select,
+.filter-container input[type="range"] {
+  width: 100%;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; /* Remove a aparência padrão no Chrome e Safari */
+  width: 100%;
+  height: 5px;
+  background: #ccc;
+  outline: none;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove o estilo padrão */
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #024A59;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #024A59;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover,
+input[type="range"]::-moz-range-thumb:hover {
+  background: #024A59; /* Muda a cor ao passar o mouse */
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #ccc;
+  
+}
+
+input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: #b3b3b3;
 }
 
   </style>
