@@ -1,5 +1,5 @@
 <template>
-    <header>
+  <header>
     <img src="./icons/logo.png" alt="Logo Facilita aí" id="logo">
     <div class="main-content">
       <div class="search-input">
@@ -31,6 +31,7 @@
   </header>
   <nav class="sidebar">
     <div class="filter-section">
+      <!-- Filtro por Tipo de Serviço -->
       <div class="filter-container">
         <h3>Tipo de Serviço</h3>
         <select v-model="serviceType">
@@ -38,33 +39,41 @@
           <option value="beleza">Beleza</option>
         </select>
       </div>
-      
-      <div class="filter-container">
-        <h3>Distância {{ distance }} km</h3>
-        <input
-        type="range"
-        v-model="distance"
-        min="0"
-        max="50"
-        step="1"
-        />
-    </div>
 
-    <div class="filter-container">
-      <h3>Preço R$ {{ price }}</h3>
-      <input
-        type="range"
-        v-model="price"
-        min="0"
-        max="3000"
-        step="50"
-      >
-    </div>
+      <!-- Filtro por Distância -->
+      <div class="filter-container">
+        <h3>Distância: {{ distance }} km</h3>
+        <input
+          type="range"
+          v-model="distance"
+          min="0"
+          max="50"
+          step="1"
+          @input="updateSlider($event, 'distance')"
+          :style="getSliderBackground(distance, 50)"
+        />
+      </div>
+
+      <!-- Filtro por Preço -->
+      <div class="filter-container">
+        <h3>Preço: R$ {{ formatPrice(price) }}</h3>
+        <input
+          type="range"
+          v-model="price"
+          min="0"
+          max="3000"
+          step="50"
+          @input="updateSlider($event, 'price')"
+          :style="getSliderBackground(price, 3000)"
+        />
+      </div>
     </div>
   </nav>
-  </template>
+</template>
+
+
   
-  <script>
+<script>
 export default {
   data() {
     return {
@@ -77,22 +86,35 @@ export default {
     };
   },
   watch: {
-    serviceType(){
+    serviceType() {
       this.filterResults();
     },
-    distance(){
+    distance() {
       this.filterResults();
     },
-    price(){
+    price() {
       this.filterResults();
     }
   },
   methods: {
-    filterResults(){
+    getSliderBackground(value, max) {
+      const percentage = (value / max) * 100;
+      return {
+        '--value': percentage + '%',
+      };
+    },
+    updateSlider(event, type) {
+      if (type === 'distance') {
+        this.distance = parseInt(event.target.value);
+      } else {
+        this.price = parseInt(event.target.value);
+      }
+    },
+    filterResults() {
       console.log('Filtrando por:', this.serviceType, this.distance, this.price);
     },
-    formatPrice(price){
-      return price.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+    formatPrice(price) {
+      return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     },
     toggleEdit() {
       this.isEditing = !this.isEditing;
@@ -111,29 +133,23 @@ export default {
     }
   }
 };
-  </script>
-  
-  <style scoped>
-  header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-    height: 7rem;
-    background: linear-gradient(
-            to left,
-            #024A59 0%,
-            #024A59 0%,
-            #024A59 0%,
-            #024A59 0%,
-            #024A59 0%,
-            #024A59 35%,
-            #024A59 49%,
-            #024A59 42%,
-            #067057 100%,
-            #068852 100%
+</script>
 
-    
-    );
+
+  
+<style scoped>
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  height: 7rem;
+  background: linear-gradient(
+    to left,
+    #024A59 0%,
+    #024A59 35%,
+    #067057 100%,
+    #068852 100%
+  );
 }
 
 .main-content {
@@ -143,51 +159,36 @@ export default {
 }
 
 .search-input {
-  margin-bottom: 20px; /* Espaço entre o campo de busca e o campo de endereço */
+  margin-bottom: 20px;
 }
 
-.header-right{
-    display: flex;
-    align-items: center;
+.header-right {
+  display: flex;
+  align-items: center;
 }
 
-  #logo {
-    margin-left: 3rem;
-    width: 100px;
-    height: auto;
-    
-  }
-  
-  #button-login {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  #button-login:hover {
-    background-color: #0056b3;
-  }
-  
-  svg {
-    cursor: pointer;
-    margin-right: 2rem;
+#logo {
+  margin-left: 3rem;
+  width: 100px;
+  height: auto;
+}
 
-  }
+svg {
+  cursor: pointer;
+  margin-right: 2rem;
+}
 
-  #search {
-    margin-top: 1.8rem;
-    display: flex;
-    padding: 12px;
-    align-items: center;  
-    border-radius: 5px;
-    border: none;
-    font-size: 1rem;
-    width: 50rem;
-  }
+#search {
+  margin-top: 1.8rem;
+  display: flex;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  width: 50rem;
+}
 
-  .address-section {
+.address-section {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -204,14 +205,6 @@ export default {
   margin-left: 8px;
 }
 
-.address-edit {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative
-}
-
 .address-edit input {
   padding: 8px;
   border-radius: 5px;
@@ -219,8 +212,8 @@ export default {
   font-size: 1rem;
   margin-bottom: 10px;
   max-width: 400px;
-  position: absolute;
 }
+
 .sidebar {
   width: 250px;
   height: 100vh;
@@ -232,49 +225,54 @@ export default {
 .filter-section {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Espaço entre os filtros */
+  gap: 20px;
 }
 
 .filter-container {
-  background-color: #ffffff; /* Fundo branco para cada container */
-  padding: 15px; /* Espaçamento interno do container */
-  border-radius: 8px; /* Cantos arredondados */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.filter-container h3 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-}
-
-.filter-container select,
-.filter-container input[type="range"] {
-  width: 100%;
-}
-
 input[type="range"] {
-  -webkit-appearance: none; /* Remove a aparência padrão no Chrome e Safari */
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  height: 5px;
-  background: #ccc;
-  outline: none;
+  height: 6px;
   border-radius: 5px;
-  transition: background 0.3s ease;
-  
+  background: transparent; /* Fundo transparente */
+  outline: none;
+  position: relative; /* Necessário para o alinhamento */
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #ccc; /* Cor da linha */
+  border-radius: 5px;
+  position: relative; /* Necessário para o alinhamento */
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Remove o estilo padrão */
+  -webkit-appearance: none;
   appearance: none;
   width: 15px;
   height: 15px;
   background: #024A59;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s ease;
+  position: relative;
+  top: -4.5px; /* Ajuste para centralizar o thumb */
+  z-index: 2; /* Garante que o thumb fique sobre o track */
+}
+
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: #ccc; /* Cor da linha */
+  border-radius: 5px;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -283,21 +281,46 @@ input[type="range"]::-moz-range-thumb {
   background: #024A59;
   border-radius: 50%;
   cursor: pointer;
+  position: relative;
+  z-index: 2; /* Garante que o thumb fique sobre o track */
 }
 
-input[type="range"]::-webkit-slider-thumb:hover,
-input[type="range"]::-moz-range-thumb:hover {
-  background: #024A59; /* Muda a cor ao passar o mouse */
+input[type="range"]::-ms-track {
+  width: 100%;
+  height: 6px;
+  background: transparent; /* Necessário para o track no IE */
+  border-color: transparent;
+  color: transparent;
 }
 
+input[type="range"]::-ms-fill-lower {
+  background: #024A59; /* Cor preenchida */
+  border-radius: 5px;
+}
+
+input[type="range"]::-ms-fill-upper {
+  background: #ccc; /* Cor além do valor do slider */
+  border-radius: 5px;
+}
+
+/* Adiciona gradiente ao fundo da linha com base no valor do slider */
 input[type="range"]::-webkit-slider-runnable-track {
-  background: #ccc;
-  
+  background: linear-gradient(
+    to right,
+    #024A59 0%,
+    #024A59 var(--value, 0%),
+    #ccc var(--value, 0%),
+    #ccc 100%
+  );
 }
 
-input[type="range"]:focus::-webkit-slider-runnable-track {
-  background: #b3b3b3;
+input[type="range"]::-moz-range-track {
+  background: linear-gradient(
+    to right,
+    #024A59 0%,
+    #024A59 var(--value, 0%),
+    #ccc var(--value, 0%),
+    #ccc 100%
+  );
 }
-
-  </style>
-  
+</style>
