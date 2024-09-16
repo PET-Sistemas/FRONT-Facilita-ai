@@ -42,7 +42,7 @@
 
       <!-- Filtro por Distância -->
       <div class="filter-container">
-        <h3>Distância: {{ distance }} km</h3>
+        <h3>DISTÂNCIA: {{ distance }} km</h3>
         <input
           type="range"
           v-model="distance"
@@ -56,7 +56,7 @@
 
       <!-- Filtro por Preço -->
       <div class="filter-container">
-        <h3>Preço: R$ {{ formatPrice(price) }}</h3>
+        <h3>PREÇO: R$ {{ formatPrice(price) }}</h3>
         <input
           type="range"
           v-model="price"
@@ -138,6 +138,7 @@ export default {
 
   
 <style scoped>
+
 header {
   display: flex;
   justify-content: space-between;
@@ -225,14 +226,16 @@ svg {
 .filter-section {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
+  font-family: 'inter', sans-serif;
+  font-size: 15px;
 }
 
 .filter-container {
   background-color: #ffffff;
-  padding: 15px;
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -323,4 +326,5 @@ input[type="range"]::-moz-range-track {
     #ccc 100%
   );
 }
+
 </style>
