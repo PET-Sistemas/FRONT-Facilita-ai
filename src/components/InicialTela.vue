@@ -1,12 +1,17 @@
 <template>
   <header>
+    <router-link to = "/">
     <img src="./icons/logo.png" alt="Logo Facilita aí" id="logo">
+    </router-link>
     <div class="main-content">
       <div class="search-input">
-        <input type="text" id="search" placeholder="Descreva o que precisa...">
+        <div class="search-container">
+          <input type="text" id="search" placeholder="Descreva o que precisa...">
+          <img src="./icons/lupa.png" alt="Search Icon" class="search-icon">
+        </div>
       </div>
       <div class="address-section">
-        <div class="address-text" @click="toggleEdit">
+        <div class="address-text" @click="toggleEdit">  
           <span>{{ address }}</span>
           <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
             <path d="M12 15.41L16.59 10.83 18 12.24 12 18.24 6 12.24 7.41 10.83 12 15.41z"/>
@@ -85,6 +90,7 @@
       </div>
     </div>
   </nav>
+  
 </template>
 
 
@@ -173,6 +179,23 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#search {
+  padding-right: 40px; /* Espaço para o ícone */
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
 }
 
 .search-input {
