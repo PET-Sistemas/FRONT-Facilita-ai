@@ -2,7 +2,7 @@
   <div class="background-default">
     <div class="blue-side">
       <div class="logo">
-        <img src="./icons/logo.png" alt="Logo">
+        <img src="@/assets/logo.png" alt="Logo">
       </div>
       <div class="welcome-text">
         Olá.<br />

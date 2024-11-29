@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { login } from '../services/api';
+import { login } from '../../../services/api';
 
 const email = ref('');
 const password = ref('');

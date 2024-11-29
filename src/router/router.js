@@ -2,10 +2,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 // Importar seus componentes dinamicamente
-const HomePage = () => import('../components/HomePage.vue');
-const CadastroPage = () => import('../components/CadastroPage.vue');
-const InicialTela = () => import('../components/InicialTela.vue');
-const ProfilePage = () => import('../components/ProfilePage.vue');
+const HomePage = () => import('../features/login/view/HomePage.vue');
+const CadastroPage = () => import('../features/cadastro/view/CadastroPage.vue');
+const InicialTela = () => import('../features/busca/view/InicialTela.vue');
+const ProfilePage = () => import('../features/perfil/view/ProfilePage.vue');
 
 // Obter a URL base a partir da variável de ambiente
 const baseUrl = process.env.VUE_APP_BASE_URL || '/';

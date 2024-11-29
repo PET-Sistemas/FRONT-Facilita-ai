@@ -1,13 +1,13 @@
 <template>
     <header>
       <router-link to = "/">
-      <img src="./icons/logo.png" alt="Logo Facilita aí" id="logo">
+      <img src="@/assets/logo.png" alt="Logo Facilita aí" id="logo">
       </router-link>
       <div class="main-content">
         <div class="search-input">
           <div class="search-container">
             <input type="text" id="search" placeholder="Descreva o que precisa...">
-            <img src="./icons/lupa.png" alt="Search Icon" class="search-icon">
+            <img src="@/assets/lupa.png" alt="Search Icon" class="search-icon">
           </div>
         </div>
         <div class="address-section">

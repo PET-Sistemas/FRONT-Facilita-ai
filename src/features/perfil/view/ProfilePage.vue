@@ -13,7 +13,7 @@
             class="profile-picture" 
           />
           <div v-if="isEditing">
-            <label for="profilePictureUpload" class="button"><img src="./icons/lapis.png"></label>
+            <label for="profilePictureUpload" class="button"><img src="@/assets/lapis.png"></label>
             <input 
               id="profilePictureUpload" 
               type="file" 
@@ -90,14 +90,10 @@
 </template>
   
 <script>
-  import HeaderPage from '../components/HeaderPage.vue';
-  import userData from '../assets/teste.json';
+  import userData from '@/test/teste.json';
   import axios from 'axios';
   export default {
     name: 'ProfilePage',
-    components: {
-      HeaderPage,
-    },
     data() {
       return {
         user: {}, // Dados do usuário
