@@ -91,79 +91,58 @@
   
 <script>
   import userData from '@/test/teste.json';
-  import axios from 'axios';
+  import ProfileViewModel from '../viewmodel/ProfileViewModel';
+  import HeaderPage from '@/components/header/HeaderPage.vue'; // Corrected path
+
   export default {
     name: 'ProfilePage',
+    components: {
+      HeaderPage // Register HeaderPage
+    },
     data() {
       return {
-        user: {}, // Dados do usuário
-        originalUser: {}, // Para reverter alterações
-        isEditing: false, // Controle de edição
-        images: [
-          "https://via.placeholder.com/800x400",
-          "https://via.placeholder.com/800x400",
-          "https://via.placeholder.com/800x400"
-        ],
-        currentIndex: 0,
+        viewModel: new ProfileViewModel(userData),
       };
-    },    
-    created() {
-      // Carregar dados do JSON ao iniciar o componente
-      this.user = { ...userData };
-      this.originalUser = { ...userData };
     },
     computed: {
+      user() {
+        return this.viewModel.getUser();
+      },
+      isEditing() {
+        return this.viewModel.isEditing;
+      },
+      images() {
+        return this.viewModel.getImages();
+      },
+      currentIndex() {
+        return this.viewModel.getCurrentIndex();
+      },
       trackTransform() {
-        const imageWidth = 100; // Cada imagem ocupa 100% da largura
+        const imageWidth = 100;
         return `translateX(-${this.currentIndex * imageWidth}%)`;
       }
     },
-      methods: {
-        async saveData() {
-          try {
-            const response = await axios.put('http://localhost:3000/user', this.user); // Salvar no backend
-            this.originalUser = { ...this.user }; // Atualiza os dados locais
-            this.isEditing = false;
-            alert(response.data.message); // Confirmação do backend
-          } catch (error) {
-            console.error('Erro ao salvar os dados:', error);
-            alert('Erro ao salvar os dados.');
-          }
-        },
-
-        toggleEdit() {
-          if (this.isEditing) {
-            // Salvar alterações
-            this.originalUser = { ...this.user };
-          }
-          this.isEditing = !this.isEditing;
-        },
-        cancelEdit() {
-          // Reverter alterações
-          this.user = { ...this.originalUser };
-          this.isEditing = false;
-        },
-        nextSlide() {
-            if (this.currentIndex < this.images.length - 1) {
-              this.currentIndex++;
-            }
-          },
-        prevSlide() {
-          if (this.currentIndex > 0) {
-            this.currentIndex--;
-          }
-        },
-        uploadProfilePicture(event) {
-          const file = event.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              this.user.profilePicture = e.target.result; // Carregar a imagem como base64 temporariamente
-            };
-            reader.readAsDataURL(file);
-          }
-        }
+    methods: {
+      async saveData() {
+        await this.viewModel.saveData();
+      },
+      toggleEdit() {
+        this.viewModel.toggleEdit();
+      },
+      cancelEdit() {
+        this.viewModel.cancelEdit();
+      },
+      nextSlide() {
+        this.viewModel.nextSlide();
+      },
+      prevSlide() {
+        this.viewModel.prevSlide();
+      },
+      uploadProfilePicture(event) {
+        const file = event.target.files[0];
+        this.viewModel.uploadProfilePicture(file);
       }
+    }
   };
 </script>
   

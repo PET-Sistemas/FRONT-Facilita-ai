@@ -1,22 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import { login } from '../../../services/api';
+import useLoginViewModel from '../viewmodel/LoginViewModel';
 
-const email = ref('');
-const password = ref('');
-const router = useRouter();
-
-const handleLogin = async () => {
-    try {
-        const result = await login(email.value, password.value);
-        router.push('/inicial_tela'); 
-    } catch (error) {
-        router.push('/inicial_tela')
-        //console.error('Falha no login:', error);
-    }
-};
+const { email, password, handleLogin } = useLoginViewModel();
 </script>
 
 <template>
@@ -26,7 +12,7 @@ const handleLogin = async () => {
       <label for="email">Email</label>
       <input type="email" id="email" v-model="email" placeholder=" "/>
     </div>
-    <div class = "password-field">
+    <div class="password-field">
       <label for="password">Senha</label>
       <input type="password" id="password" v-model="password" placeholder="">
       <RouterLink to="/recover">
@@ -42,13 +28,6 @@ const handleLogin = async () => {
     </div>
   </div>
 </template>
-
-<script>
-
-
-</script>
-
-
 
 <style scoped>
 body {

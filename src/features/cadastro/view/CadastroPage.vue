@@ -5,36 +5,36 @@
           <div id="title">Cadastrar</div>
           <div class="name-field">
             <label for="name">Nome completo</label>
-            <input type="text" id="name" placeholder="" v-model="name" />
+            <input type="text" id="name" placeholder="" v-model="viewModel.name" />
           </div>
   
           <div class="double-field">
             <div class="data-field">
               <label for="datanascimento">Data de nascimento</label>
-              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="birthdate" placeholder="DD/MM/AAAA">
+              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="viewModel.birthdate" placeholder="DD/MM/AAAA">
             </div>
         
             <div class="phone-field">
               <label for="phone">Telefone</label>
-              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" />
+              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.phone" />
             </div>
         </div>
   
           <div class="double-field">
             <div class="state-field">
               <label for="state">Estado</label>
-              <select id="state" class="state" v-model="selectedState" @change="fetchCities">
+              <select id="state" class="state" v-model="viewModel.selectedState" @change="viewModel.fetchCities">
                 <option value="">UF</option>
-                <option v-for="state in states" :key="state.sigla" :value="state.sigla">
+                <option v-for="state in viewModel.states" :key="state.sigla" :value="state.sigla">
                   {{ state.nome }}
                 </option>
               </select>
             </div>
             <div class="city-field">
               <label for="city">Cidade</label>
-              <select id="city" class="city" v-model="selectedCity">
+              <select id="city" class="city" v-model="viewModel.selectedCity">
                 <option value="">Cidade</option>
-                <option v-for="city in cities" :key="city.nome" :value="city.nome">
+                <option v-for="city in viewModel.cities" :key="city.nome" :value="city.nome">
                   {{ city.nome }}
                 </option>
               </select>
@@ -43,28 +43,28 @@
   
           <div class="email-field">
             <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="" v-model="email" />
+            <input type="email" id="email" placeholder="" v-model="viewModel.email" />
           </div>
   
           <div class="double-field">
             <div class="password-field">
               <label for="password">Senha</label>
-              <input type="password" id="password" placeholder="" v-model="password" />
+              <input type="password" id="password" placeholder="" v-model="viewModel.password" />
             </div>
             <div class="confirmation">
               <label for="confirmation">Confirmar senha</label>
-              <input type="password" id="confirmation" placeholder="" v-model="confirmation" />
+              <input type="password" id="confirmation" placeholder="" v-model="viewModel.confirmation" />
             </div>
           </div>
   
           <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="sellProduct" />
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="viewModel.sellProduct" />
             <label class="form-check-label" for="flexSwitchCheckDefault">Vender produto</label>
           </div>
   
           <div class="button-sign">
             <router-link to="/">
-              <button id="button-sign2">CADASTRAR</button>
+              <button id="button-sign2" @click="viewModel.submitForm">CADASTRAR</button>
             </router-link>
           </div>
   
@@ -77,88 +77,20 @@
     </div>
   </template>
   
-
-
-
-
 <script>
-import axios from 'axios';
+import CadastroViewModel from '../viewmodel/CadastroViewModel';
 
 export default {
     data() {
         return {
-            name: '',
-            birthdate: '',
-            phone: '',
-            selectedState: '',
-            selectedCity: '',
-            email: '',
-            password: '',
-            confirmation: '',
-            sellProduct: false,
-            states: [],
-            cities: [] 
+            viewModel: new CadastroViewModel()
         };
     },
     mounted() {
-        this.fetchStates(); 
-    },
-    methods: {
-        async fetchStates() {
-            try {
-                const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-                this.states = response.data;
-            } catch (error) {
-                console.error('Erro ao buscar estados:', error);
-            }
-        },
-        async fetchCities() {
-            try {
-                if (this.selectedState) {
-                    const response = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.selectedState}/municipios`);
-                    this.cities = response.data;
-                }
-            } catch (error) {
-                console.error('Erro ao buscar cidades:', error);
-            }
-        },
-        async submitForm() {
-            if (this.password !== this.confirmation) {
-                alert('As senhas não coincidem.');
-                return;
-            }
-
-            try {
-                const userData = {
-                    name: this.name,
-                    birthdate: this.birthdate,
-                    phone: this.phone,
-                    state: this.selectedState,
-                    city: this.selectedCity,
-                    email: this.email,
-                    password: this.password,
-                    confirmation: this.confirmation,
-                    sellProduct: this.sellProduct
-                };
-
-                console.log('dados:', userData);
-
-                // Substitua a URL abaixo pela URL do backend
-                const response = await axios.post('https://api.seusite.com/cadastrar', userData);
-
-                if (response.status === 200) {
-                    alert('Cadastro realizado com sucesso!');
-                }
-            } catch (error) {
-                console.error('Erro ao cadastrar usuário:', error);
-                alert('Ocorreu um erro ao cadastrar o usuário.');
-            }
-        }
+        this.viewModel.fetchStates(); 
     }
 };
-
 </script>
-
 
 <style scoped>
 

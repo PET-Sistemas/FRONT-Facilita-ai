@@ -1,38 +1,6 @@
 <template>
-  <header>
-    <router-link to = "/">
-    <img src="@/assets/logo.png" alt="Logo Facilita aí" id="logo">
-    </router-link>
-    <div class="main-content">
-      <div class="search-input">
-        <div class="search-container">
-          <input type="text" id="search" placeholder="Descreva o que precisa...">
-          <img src="@/assets/lupa.png" alt="Search Icon" class="search-icon">
-        </div>
-      </div>
-      <div class="address-section">
-        <div class="address-text" @click="toggleEdit">  
-          <span>{{ address }}</span>
-          <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
-            <path d="M12 15.41L16.59 10.83 18 12.24 12 18.24 6 12.24 7.41 10.83 12 15.41z"/>
-          </svg>
-        </div>
-        <div v-if="isEditing" class="address-edit">
-          <input 
-            v-model="newAddress" 
-            type="text" 
-            placeholder="Digite o novo endereço..."
-            @keyup.enter="saveAddress"
-            ref="addressInput"
-          >
-        </div>
-      </div>
-    </div>
-    <div class="header-right">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="#ffffff">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4z"/>
-      </svg>
-    </div>
+   <header>
+    <HeaderPage />
   </header>
   <nav class="sidebar">
     <div class="filter-section">
@@ -96,64 +64,14 @@
 
   
 <script>
+import InicialViewModel from '@/features/busca/viewmodel/InicialViewModel';
+import HeaderPage from '@/components/header/HeaderPage.vue';
+
 export default {
-  data() {
-    return {
-      address: 'Endereço Atual', 
-      newAddress: '', 
-      isEditing: false,
-      serviceType: '',
-      distance: 25,
-      price: 500
-    };
+  mixins: [InicialViewModel],
+  components: {
+      HeaderPage // Register HeaderPage
   },
-  watch: {
-    serviceType() {
-      this.filterResults();
-    },
-    distance() {
-      this.filterResults();
-    },
-    price() {
-      this.filterResults();
-    }
-  },
-  methods: {
-    getSliderBackground(value, max) {
-      const percentage = (value / max) * 100;
-      return {
-        '--value': percentage + '%',
-      };
-    },
-    updateSlider(event, type) {
-      if (type === 'distance') {
-        this.distance = parseInt(event.target.value);
-      } else {
-        this.price = parseInt(event.target.value);
-      }
-    },
-    filterResults() {
-      console.log('Filtrando por:', this.serviceType, this.distance, this.price);
-    },
-    formatPrice(price) {
-      return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    },
-    toggleEdit() {
-      this.isEditing = !this.isEditing;
-      if (this.isEditing) {
-        this.$nextTick(() => {
-          this.$refs.addressInput.focus(); 
-        });
-      }
-    },
-    saveAddress() {
-      if (this.newAddress.trim()) {
-        this.address = this.newAddress;
-        this.newAddress = '';
-        this.isEditing = false;
-      }
-    }
-  }
 };
 </script>
 
