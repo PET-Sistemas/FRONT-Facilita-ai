@@ -81,36 +81,25 @@
 
 <script>
 import InicialViewModel from '@/features/busca/viewmodel/InicialViewModel';
+import InicialModel from '@/features/busca/model/InicialModel';
 import HeaderPage from '@/components/header/HeaderPage.vue';
-import servicesData from '@/test/lista.json';
 
 export default {
-  mixins: [InicialViewModel],
+  mixins: [InicialViewModel, InicialModel],
   components: {
     HeaderPage
   },
   data() {
     return {
-      services: servicesData.map(service => ({ ...service, solicitado: false })),
       selectedServices: [],
       distance: 50,
       price: 3000,
     };
   },
-  methods: {
-    toggleSolicitado(service) {
-      service.solicitado = !service.solicitado;
-    }
-  },
   computed: {
     filteredServices() {
       console.log('Filtrando serviços:', this.services);
-      return this.services.filter(service => {
-        const matchesServiceType = this.selectedServices.length === 0 || this.selectedServices.includes(service["Nome do Serviço"].toLowerCase());
-        const matchesDistance = service["Distância em KM"] <= this.distance;
-        const matchesPrice = service.Preço <= this.price;
-        return matchesServiceType && matchesDistance && matchesPrice;
-      });
+      return this.filterServices(this.selectedServices, this.distance, this.price);
     },
   },
   mounted() {
@@ -136,11 +125,15 @@ header {
 
 .main-container {
   display: flex;
+  height: 100vh; /* Ajuste para garantir que o contêiner ocupe a altura total da tela */
+  overflow: hidden; /* Ensure the container itself does not scroll */
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
+  overflow-y: auto; /* Add scroll if necessary */
+  margin-bottom: 10rem; /* Aumenta a margem inferior para 10rem */
 }
 
 .search-container {
@@ -187,7 +180,8 @@ svg {
   border-radius: 5px;
   border: none;
   font-size: 1rem;
-  width: 50rem;
+  width: 100%;
+  max-width: 50rem;
 }
 
 .address-section {
@@ -218,10 +212,11 @@ svg {
 
 .sidebar {
   width: 250px;
-  height: 100vh;
+  height: 100vh; /* Ajuste para garantir que a sidebar ocupe a altura total da tela */
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Add scroll if necessary */
 }
 
 .filter-section {
@@ -353,6 +348,7 @@ input[type="range"]::-moz-range-track {
 .card p:nth-child(2) {
   color: #5C5B5B;
   font-family: 'Crete Round', serif;
+  font-size: 18px; /* Diminui o tamanho da fonte para 18px */
 }
 
 .service-image {
@@ -420,5 +416,38 @@ input[type="range"]::-moz-range-track {
 
 .solicitado-button:hover {
   background-color: #D9542B;
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .service-cards {
+    padding: 10px;
+  }
+
+  .card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .service-image {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .card-footer {
+    justify-content: center;
+  }
 }
 </style>
