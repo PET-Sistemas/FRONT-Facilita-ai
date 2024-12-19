@@ -1,0 +1,74 @@
+[
+    {
+        "Nome do Serviço": "Limpeza Residencial",
+        "Nome do Prestador": "João Silva",
+        "Distância em KM": 5,
+        "Preço": 150,
+        "Avaliação em Estrelas": 3.5,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Manutenção de Computadores",
+        "Nome do Prestador": "Maria Oliveira",
+        "Distância em KM": 10,
+        "Preço": 200,
+        "Avaliação em Estrelas": 5,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Jardinagem",
+        "Nome do Prestador": "Carlos Souza",
+        "Distância em KM": 3,
+        "Preço": 100,
+        "Avaliação em Estrelas": 2,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Aulas de Inglês",
+        "Nome do Prestador": "Ana Pereira",
+        "Distância em KM": 8,
+        "Preço": 80,
+        "Avaliação em Estrelas": 1,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Conserto de Eletrodomésticos",
+        "Nome do Prestador": "Pedro Santos",
+        "Distância em KM": 12,
+        "Preço": 250,
+        "Avaliação em Estrelas": 4.5,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Reparos Elétricos",
+        "Nome do Prestador": "Lucas Lima",
+        "Distância em KM": 7,
+        "Preço": 180,
+        "Avaliação em Estrelas": 4,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Pintura Residencial",
+        "Nome do Prestador": "Fernanda Costa",
+        "Distância em KM": 15,
+        "Preço": 300,
+        "Avaliação em Estrelas": 4.8,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Serviços de Encanamento",
+        "Nome do Prestador": "Roberto Almeida",
+        "Distância em KM": 6,
+        "Preço": 220,
+        "Avaliação em Estrelas": 3.7,
+        "Imagem": "https://via.placeholder.com/100x100"
+    },
+    {
+        "Nome do Serviço": "Consultoria Financeira",
+        "Nome do Prestador": "Juliana Mendes",
+        "Distância em KM": 20,
+        "Preço": 500,
+        "Avaliação em Estrelas": 5,
+        "Imagem": "https://via.placeholder.com/100x100"
+    }
+]
