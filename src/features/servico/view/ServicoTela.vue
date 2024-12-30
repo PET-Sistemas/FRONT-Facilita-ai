@@ -67,7 +67,7 @@ export default {
   },
   data() {
     return {
-      formData: {
+      formData: { //Atualizar
         description: "",
         price: null,
       },
@@ -76,6 +76,7 @@ export default {
   methods: {
     deleteUser() {
       alert("Usuário excluído!");
+      // Logica do botao de excluir
     },
     submitForm() {
       alert(
@@ -171,6 +172,11 @@ label {
   font-size: 0.9em;
 }
 
+.description-field {
+ display: flex;
+ flex-direction: column;
+}
+
 textarea,
 input {
   width: 100%;
@@ -184,6 +190,23 @@ input {
 textarea {
   height: 100px;
 }
+
+.price-field {
+ display: flex;
+ flex-direction: column;
+ margin-right: 70%;
+}
+
+
+#price {
+ height: auto;
+ margin-bottom: 15px;
+ padding: 10px auto;
+ border: 1px solid #777;
+ border-radius: 5px;
+ font-family: 'crete round', serif;
+}
+
 
 .submit-btn {
   width: 50%;
