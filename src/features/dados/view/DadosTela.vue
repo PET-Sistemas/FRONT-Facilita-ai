@@ -4,7 +4,7 @@
   </header>
     
   <body>
-    <div class="servico-container">
+    <div class="data-container">
       <div class="form-container">
         <h2>Dados</h2>
         <hr>
@@ -60,7 +60,7 @@
 </template>
     
 <script>
-  import CadastroservicoViewModel from '../viewmodel/CadastroServicoViewModel';
+  import DadosViewModel from '../viewmodel/DadosViewModel';
   import HeaderPage from '@/components/header/HeaderPage.vue'; //
   import userData from '@/test/teste.json';
   
@@ -71,7 +71,7 @@
     },
     data() {
       return {
-        viewModel: new CadastroservicoViewModel(userData),
+        viewModel: new DadosViewModel(userData),
       };
     },
 
@@ -99,10 +99,11 @@
     height: 0px;
   }
 
-  .servico-container {
+  .data-container {
     background: linear-gradient(1.87deg, rgba(2, 74, 89, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
-    height: 100vh;
+    height: 100%;
     width: 100%;
+    padding: 0%;
   }
 
   .form-container {

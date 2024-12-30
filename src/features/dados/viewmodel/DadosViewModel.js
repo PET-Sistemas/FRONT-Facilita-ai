@@ -1,4 +1,4 @@
-import CadastroservicoModel from '../model/CadastroservicoModel';
+import CadastroservicoModel from '../model/Dados';
 import axios from 'axios';
 
 export default class CadastroservicoViewModel {
