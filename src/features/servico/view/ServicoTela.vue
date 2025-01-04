@@ -89,18 +89,25 @@ export default {
 </script>
 
 <style>
+
 html,
 body {
   height: 100%;
-  margin: 0;
+  margin: 0px;
 }
 
 body {
   overflow-y: scroll;
 }
 
+::-webkit-scrollbar {
+    width: 0px;  /* Para barra de rolagem vertical */
+    height: 0px; /* Para barra de rolagem horizontal */
+  }
+
 .service-container {
-  height: 100%;
+  min-height: 90vh;
+  max-height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
