@@ -17,7 +17,7 @@
           />
           <div class="service-info">
             <strong>Nome do serviço</strong>
-            <p class="subtext">Prestador de Serviço</p>
+            <p class="subtext" v-if="showParagraph">Prestador de Serviço</p>
           </div>
           <button @click="deleteUser" class="trash-btn">
             <img
@@ -50,7 +50,7 @@
             />
           </div>
 
-          <button type="submit" class="submit-btn">ENVIAR EDIÇÃO</button>
+          <button type="submit" class="submit-btn">CADASTRAR SERVIÇO</button>
         </form>
       </div>
     </div>
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      showParagraph: true,
       formData: { //Atualizar
         description: "",
         price: null,
@@ -76,7 +77,7 @@ export default {
   methods: {
     deleteUser() {
       alert("Usuário excluído!");
-      // Logica do botao de excluir
+      this.showParagraph = false; // Esconde o parágrafo ao clicar no botão
     },
     submitForm() {
       alert(
