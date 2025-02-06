@@ -6,12 +6,12 @@ export default class CadastroViewModel {
         this.name = '';
         this.birthdate = '';
         this.phone = '';
+        this.address = '';
         this.selectedState = '';
         this.selectedCity = '';
         this.email = '';
         this.password = '';
         this.confirmation = '';
-        this.sellProduct = false;
         this.states = [];
         this.cities = [];
     }
@@ -47,12 +47,12 @@ export default class CadastroViewModel {
                 this.name,
                 this.birthdate,
                 this.phone,
+                this.address,
                 this.selectedState,
                 this.selectedCity,
                 this.email,
                 this.password,
-                this.confirmation,
-                this.sellProduct
+                this.confirmation
             );
 
             console.log('dados:', userData);

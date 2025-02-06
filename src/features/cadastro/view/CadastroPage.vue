@@ -19,6 +19,11 @@
               <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.phone" />
             </div>
         </div>
+
+         <div class="address-field">
+            <label for="address">Endereço</label>
+            <input type="text" id="address" placeholder="" v-model="viewModel.address" />
+          </div>
   
           <div class="double-field">
             <div class="state-field">
@@ -56,12 +61,7 @@
               <input type="password" id="confirmation" placeholder="" v-model="viewModel.confirmation" />
             </div>
           </div>
-  
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="viewModel.sellProduct" />
-            <label class="form-check-label" for="flexSwitchCheckDefault">Vender produto</label>
-          </div>
-  
+
           <div class="button-sign">
             <router-link to="/">
               <button id="button-sign2" @click="viewModel.submitForm">CADASTRAR</button>
@@ -96,51 +96,6 @@ export default {
 
 input::placeholder {
   color: #999;
-}
-.form-check {
-  display: flex;
-  align-items: center;
-  margin-top: 1.7rem !important;
-  margin-right: 4.5rem !important;
-}
-
-.form-check-label {
-  font-size: 1.3em !important;
-  margin-right: 1rem;
-}
-
-.form-check-input {
-  width: 3.5rem;
-  height: 1.75rem;
-  background-color: rgba(206, 206, 206, 1);
-  border-radius: 1rem;
-  position: relative;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-left: 6.5%;
-  margin-right: 1em;
-}
-
-.form-check-input:checked {
-  background-color: rgba(242, 101, 48, 1);
-}
-
-.form-check-input::before {
-  content: '';
-  position: absolute;
-  top: 0.125rem;
-  left: 0.125rem;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.3s;
-}
-
-.form-check-input:checked::before {
-  transform: translateX(1.75rem);
 }
 
 .container {
@@ -271,6 +226,26 @@ input::placeholder {
     color: #888;
 }
 
+.address-field{
+    margin-top: 1.3rem !important;
+    margin-left: 3.5rem;
+    margin-right: 5.5rem;
+    color: #3E3E3E;
+    font-size: 1.3em;   
+}
+
+#address{
+    display: block;
+    margin-top: 0.5rem;
+    padding: 0.25rem;
+    height: 3.5rem;
+    width: 100%;
+    border-radius: 10px;
+    border: 0.1rem solid #C0C0C0;
+    box-sizing: border-box;
+    background-color: #FFF ;
+    font-size: 0.9em;
+}
 
 .state{
     display: block !important;
