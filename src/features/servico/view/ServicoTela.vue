@@ -17,15 +17,7 @@
           />
           <div class="service-info">
             <strong>Nome do serviço</strong>
-            <p class="subtext" v-if="showParagraph">Prestador de Serviço</p>
           </div>
-          <button @click="deleteUser" class="trash-btn">
-            <img
-              src="@/assets/lixeira.png"
-              alt="Lixeira"
-              class="trashcan"
-            />
-          </button>
         </div>
 
         <form @submit.prevent="submitForm">
@@ -39,13 +31,34 @@
             ></textarea>
           </div>
 
+          <div class="categorie-field">
+            <label for="categorie">Categorias:</label>
+            <div class="categorie-container">
+            <label class="label-categorie">
+              <input type="checkbox" value="limpeza" v-model="selectedServices"> Limpeza
+            </label>
+            <label class="label-categorie">
+              <input type="checkbox" value="construcao" v-model="selectedServices"> Construção
+            </label>
+            <label class="label-categorie">
+              <input type="checkbox" value="manutencao" v-model="selectedServices"> Manutenção
+            </label>
+            <label class="label-categorie">
+              <input type="checkbox" value="eletrica" v-model="selectedServices"> Elétrica
+            </label>
+            <label class="label-categorie">
+              <input type="checkbox" value="hidraulica" v-model="selectedServices"> Hidráulica
+            </label>
+            <label class="label-categorie">
+              <input type="checkbox" value="pintura" v-model="selectedServices"> Estética
+            </label>
+          </div>
+          </div>
+
           <div class="price-field">
-            <label for="price">Preço</label>
+            <label for="price">Preço:</label>
             <input
               id="price"
-              v-model="formData.price"
-              type="number"
-              step="any"
               placeholder="R$0,00"
             />
           </div>
@@ -75,10 +88,6 @@ export default {
     };
   },
   methods: {
-    deleteUser() {
-      alert("Usuário excluído!");
-      this.showParagraph = false; // Esconde o parágrafo ao clicar no botão
-    },
     submitForm() {
       alert(
         `Descrição: ${this.formData.description}\nPreço: ${this.formData.price}`
@@ -205,7 +214,6 @@ textarea {
  margin-right: 70%;
 }
 
-
 #price {
  height: auto;
  margin-bottom: 15px;
@@ -219,19 +227,34 @@ textarea {
 .submit-btn {
   width: 50%;
   margin: 2.5em auto 0;
-  padding: 0.25rem;
-  background-color: #f26530;
-  height: 3.2rem;
-  border-radius: 7px;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1.5em;
-  cursor: pointer;
+  padding: 0.5em;
   border: none;
-  text-align: center;
+  background-color: #F26530;
+  color: white;
+  font-size: 1.2em;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .submit-btn:hover {
   background-color: #e65500;
+}
+
+.categorie-container {
+  display: flex;
+  flex-direction: column; /* Mantém os checkboxes em coluna */
+  align-items: flex-start; /* Alinha os checkboxes à esquerda */
+}
+
+.label-categorie {
+  display: flex;
+  gap: 8px; /* Espaço entre checkbox e texto */
+  cursor: pointer;
+}
+
+.categorie-field {
+ display: flex;
+ flex-direction: column;
+ margin-right: 70%;
 }
 </style>
