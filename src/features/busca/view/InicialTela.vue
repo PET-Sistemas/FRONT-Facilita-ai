@@ -43,6 +43,7 @@
     </nav>
     <div class="main-content">
       <div class="filter-rating">
+        <button class="register-button" @click="navigateToServico">Cadastrar Serviço</button>
         <button class="dropdown-button" @click="toggleDropdown">
           Ordenar Avaliação
           <span :class="{'arrow-up': dropdownOpen, 'arrow-down': !dropdownOpen}"></span>
@@ -125,6 +126,9 @@ export default {
       this.sortServices();
       this.dropdownOpen = false;
     },
+    navigateToServico() {
+      this.$router.push('/servico');
+    }
   },
 };
 </script>
@@ -521,6 +525,20 @@ solicitado-button:hover {
   box-sizing: border-box;
   background-color: #FFF;
   font-size: 0.9em;
+}
+
+.register-button {
+  padding: 10px 20px;
+  background-color: #F26530;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.register-button:hover {
+  background-color: #D9542B;
 }
 
 @media (max-width: 768px) {
