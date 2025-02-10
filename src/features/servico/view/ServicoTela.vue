@@ -34,25 +34,16 @@
           <div class="categorie-field">
             <label for="categorie">Categorias:</label>
             <div class="categorie-container">
-            <label class="label-categorie">
-              <input type="checkbox" value="limpeza" v-model="selectedServices"> Limpeza
-            </label>
-            <label class="label-categorie">
-              <input type="checkbox" value="construcao" v-model="selectedServices"> Construção
-            </label>
-            <label class="label-categorie">
-              <input type="checkbox" value="manutencao" v-model="selectedServices"> Manutenção
-            </label>
-            <label class="label-categorie">
-              <input type="checkbox" value="eletrica" v-model="selectedServices"> Elétrica
-            </label>
-            <label class="label-categorie">
-              <input type="checkbox" value="hidraulica" v-model="selectedServices"> Hidráulica
-            </label>
-            <label class="label-categorie">
-              <input type="checkbox" value="pintura" v-model="selectedServices"> Estética
-            </label>
-          </div>
+              <button class="dropdown-menu">Opções</button>
+              <div class="dropdown-content">
+                <a value="limpeza">Limpeza</a>
+                <a value="construcao">Construção</a>
+                <a value="manutencao">Manutenção</a>
+                <a value="eletrica">Elétrica</a>
+                <a value="hidraulica">Hidráulica</a>
+                <a value="pintura">Estética</a>
+              </div>
+            </div>
           </div>
 
           <div class="price-field">
@@ -246,15 +237,58 @@ textarea {
   align-items: flex-start; /* Alinha os checkboxes à esquerda */
 }
 
-.label-categorie {
-  display: flex;
-  gap: 8px; /* Espaço entre checkbox e texto */
+.categorie-container:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-menu {
+  margin-bottom: 15px;
+  padding: 10px;
+  min-width: 200px;
+  border: 1px solid #777;
+  background-color: white;
+  border-radius: 5px;
+  font-family: "Crete Round", serif;
+  color:#777;
   cursor: pointer;
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  width: auto;
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.dropdown-content a:last-child {
+  width: auto;
+  border-bottom: none;
+}
+
+.dropdown-content a:hover {
+  width: auto;
+  background-color: #e65500;
+  color: white;
+  border-radius: 5px;
 }
 
 .categorie-field {
  display: flex;
  flex-direction: column;
- margin-right: 70%;
 }
 </style>
