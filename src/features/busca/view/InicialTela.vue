@@ -5,26 +5,15 @@
       <div class="filter-section">
         <div class="filter-container">
           <h3>TIPO DE SERVIÇO</h3>
-          <div>
-            <label>
-              <input type="checkbox" value="limpeza" v-model="selectedServices"> Limpeza
-            </label>
-            <label>
-              <input type="checkbox" value="construcao" v-model="selectedServices"> Construção
-            </label>
-            <label>
-              <input type="checkbox" value="manutencao" v-model="selectedServices"> Manutenção
-            </label>
-            <label>
-              <input type="checkbox" value="eletrica" v-model="selectedServices"> Elétrica
-            </label>
-            <label>
-              <input type="checkbox" value="hidraulica" v-model="selectedServices"> Hidráulica
-            </label>
-            <label>
-              <input type="checkbox" value="pintura" v-model="selectedServices"> Estética
-            </label>
-          </div>
+          <select id="serviceType" class="service-type" v-model="serviceType">
+            <option value="">Selecione</option>
+            <option value="limpeza">Limpeza</option>
+            <option value="construcao">Construção</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="eletrica">Elétrica</option>
+            <option value="hidraulica">Hidráulica</option>
+            <option value="pintura">Estética</option>
+          </select>
         </div>
         <div class="filter-container">
           <h3>DISTÂNCIA: {{ distance }} km</h3>
@@ -53,6 +42,16 @@
       </div>
     </nav>
     <div class="main-content">
+      <div class="filter-rating">
+        <button class="dropdown-button" @click="toggleDropdown">
+          Ordenar Avaliação
+          <span :class="{'arrow-up': dropdownOpen, 'arrow-down': !dropdownOpen}"></span>
+        </button>
+        <div v-if="dropdownOpen" class="dropdown-menu">
+          <button @click="setRatingOrder('desc')">Maior para Menor</button>
+          <button @click="setRatingOrder('asc')">Menor para Maior</button>
+        </div>
+      </div>
       <section class="service-cards">
         <div v-for="service in filteredServices" :key="service['Nome do Serviço']" class="card">
           <img :src="service.Imagem" alt="Imagem do Serviço" class="service-image" />
@@ -94,16 +93,38 @@ export default {
       selectedServices: [],
       distance: 50,
       price: 3000,
+      ratingOrder: 'desc',
+      dropdownOpen: false,
+      serviceType: '',
     };
   },
   computed: {
     filteredServices() {
       console.log('Filtrando serviços:', this.services);
-      return this.filterServices(this.selectedServices, this.distance, this.price);
+      let services = this.filterServices(this.selectedServices, this.distance, this.price);
+      if (this.ratingOrder === 'asc') {
+        services.sort((a, b) => a['Avaliação em Estrelas'] - b['Avaliação em Estrelas']);
+      } else {
+        services.sort((a, b) => b['Avaliação em Estrelas'] - a['Avaliação em Estrelas']);
+      }
+      return services;
     },
   },
   mounted() {
     console.log('Dados carregados:', this.services);
+  },
+  methods: {
+    sortServices() {
+      this.filteredServices; // Trigger computed property to re-evaluate
+    },
+    toggleDropdown() {
+      this.dropdownOpen = !this.dropdownOpen;
+    },
+    setRatingOrder(order) {
+      this.ratingOrder = order;
+      this.sortServices();
+      this.dropdownOpen = false;
+    },
   },
 };
 </script>
@@ -414,8 +435,92 @@ input[type="range"]::-moz-range-track {
   margin-top: 10px;
 }
 
-.solicitado-button:hover {
+solicitado-button:hover {
   background-color: #D9542B;
+}
+
+.filter-rating {
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dropdown-button {
+  padding: 10px 20px;
+  background: none;
+  color: #024A59;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-button:hover {
+  color: #067057;
+}
+
+.dropdown-button .arrow-up::after,
+.dropdown-button .arrow-down::after {
+  content: '';
+  display: inline-block;
+  margin-left: 10px;
+  border: solid #024A59;
+  border-width: 0 2px 2px 0;
+  padding: 3px;
+  align-self: center; /* Align arrow with text */
+}
+
+.dropdown-button:hover .arrow-up::after,
+.dropdown-button:hover .arrow-down::after {
+  border-color: #067057;
+}
+
+.dropdown-button .arrow-up::after {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.dropdown-button .arrow-down::after {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Align with the button */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.dropdown-menu button {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f0f0f0;
+}
+
+.service-type {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  height: 3.5rem;
+  width: 12.5rem;
+  border-radius: 10px;
+  border: 0.1rem solid #C0C0C0;
+  box-sizing: border-box;
+  background-color: #FFF;
+  font-size: 0.9em;
 }
 
 @media (max-width: 768px) {
