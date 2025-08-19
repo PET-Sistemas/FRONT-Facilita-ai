@@ -1,25 +1,25 @@
-import axios from 'axios';
+import axios from '../../../plugins/axios';
 import CadastroModel from '../model/CadastroModel';
 
 export default class CadastroViewModel {
     constructor() {
-        this.name = '';
-        this.birthdate = '';
-        this.phone = '';
-        this.address = '';
-        this.selectedState = '';
-        this.selectedCity = '';
+        this.nomeCompleto = '';
+        this.dataNascimento = '';
+        this.telefone = '';
+        this.endereco = '';
+        this.cidade = '';
+        this.estado = '';
         this.email = '';
-        this.password = '';
-        this.confirmation = '';
-        this.states = [];
-        this.cities = [];
+        this.senha = '';
+       // this.confirmacao = '';
+        this.estados = [];
+        this.cidades = [];
     }
 
     async fetchStates() {
         try {
             const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-            this.states = response.data;
+            this.estados = response.data;
         } catch (error) {
             console.error('Erro ao buscar estados:', error);
         }
@@ -27,9 +27,11 @@ export default class CadastroViewModel {
 
     async fetchCities() {
         try {
-            if (this.selectedState) {
-                const response = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.selectedState}/municipios`);
-                this.cities = response.data;
+            if (this.estadoSelecionado) {
+                const response = await axios.get(
+                    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.estadoSelecionado}/municipios`
+                );
+                this.cidades = response.data;
             }
         } catch (error) {
             console.error('Erro ao buscar cidades:', error);
@@ -37,35 +39,39 @@ export default class CadastroViewModel {
     }
 
     async submitForm() {
-        if (this.password !== this.confirmation) {
-            alert('As senhas não coincidem.');
-            return;
-        }
-
         try {
             const userData = new CadastroModel(
-                this.name,
-                this.birthdate,
-                this.phone,
-                this.address,
-                this.selectedState,
-                this.selectedCity,
+                this.nomeCompleto,
+                this.dataNascimento,
+                this.telefone,
+                this.endereco,
+                this.estadoSelecionado,
+                this.cidadeSelecionada,
                 this.email,
-                this.password,
-                this.confirmation
+                this.senha,
+                //this.confirmacao
             );
 
-            console.log('dados:', userData);
+            // Mostra no console o que vai ser enviado
+            console.log('📤 Enviando dados para o back-end:', JSON.stringify(userData, null, 2));
 
-            // Substitua a URL abaixo pela URL do backend
-            const response = await axios.post('https://api.seusite.com/cadastrar', userData);
+            // Agora use o endpoint relativo, pois o baseURL está no axios.js
+            const response = await axios.post('/usuario', userData);
+
+            // Mostra no console a resposta recebida
+            console.log('📥 Resposta do back-end:', response.status, response.data);
 
             if (response.status === 200) {
-                alert('Cadastro realizado com sucesso!');
+                alert('✅ Cadastro realizado com sucesso!');
             }
-        } catch (error) {
-            console.error('Erro ao cadastrar usuário:', error);
+        }catch (error) {
+    console.error('❌ Erro ao cadastrar usuário:', error);
+
+    const nomeErro = error.name || 'Erro';
+    const mensagemErro = error.response?.data?.mensagem || error.message || 'Erro desconhecido';
+
+    alert(`Erro (${nomeErro}): ${mensagemErro}`);
+}
             alert('Ocorreu um erro ao cadastrar o usuário.');
-        }
     }
 }

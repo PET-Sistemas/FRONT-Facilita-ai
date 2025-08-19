@@ -5,41 +5,41 @@
           <div id="title">Cadastrar</div>
           <div class="name-field">
             <label for="name">Nome completo</label>
-            <input type="text" id="name" placeholder="" v-model="viewModel.name" />
+            <input type="text" id="name" placeholder="" v-model="viewModel.nomeCompleto" />
           </div>
   
           <div class="double-field">
             <div class="data-field">
               <label for="datanascimento">Data de nascimento</label>
-              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="viewModel.birthdate" placeholder="DD/MM/AAAA">
+              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="viewModel.dataNascimento" placeholder="DD/MM/AAAA">
             </div>
         
             <div class="phone-field">
               <label for="phone">Telefone</label>
-              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.phone" />
+              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.telefone" />
             </div>
         </div>
 
          <div class="address-field">
             <label for="address">Endereço</label>
-            <input type="text" id="address" placeholder="" v-model="viewModel.address" />
+            <input type="text" id="address" placeholder="" v-model="viewModel.endereco" />
           </div>
   
           <div class="double-field">
             <div class="state-field">
               <label for="state">Estado</label>
-              <select id="state" class="state" v-model="viewModel.selectedState" @change="viewModel.fetchCities">
+              <select id="state" class="state" v-model="viewModel.estadoSelecionado" @change="viewModel.fetchCities">
                 <option value="">UF</option>
-                <option v-for="state in viewModel.states" :key="state.sigla" :value="state.sigla">
+                <option v-for="state in viewModel.estados" :key="state.sigla" :value="state.sigla">
                   {{ state.nome }}
                 </option>
               </select>
             </div>
             <div class="city-field">
               <label for="city">Cidade</label>
-              <select id="city" class="city" v-model="viewModel.selectedCity">
+              <select id="city" class="city" v-model="viewModel.cidadeSelecionada">
                 <option value="">Cidade</option>
-                <option v-for="city in viewModel.cities" :key="city.nome" :value="city.nome">
+                <option v-for="city in viewModel.cidades" :key="city.nome" :value="city.nome">
                   {{ city.nome }}
                 </option>
               </select>
@@ -54,17 +54,13 @@
           <div class="double-field">
             <div class="password-field">
               <label for="password">Senha</label>
-              <input type="password" id="password" placeholder="" v-model="viewModel.password" />
-            </div>
-            <div class="confirmation">
-              <label for="confirmation">Confirmar senha</label>
-              <input type="password" id="confirmation" placeholder="" v-model="viewModel.confirmation" />
+              <input type="password" id="password" placeholder="" v-model="viewModel.senha" />
             </div>
           </div>
 
           <div class="button-sign">
             <router-link to="/">
-              <button id="button-sign2" @click="viewModel.submitForm">CADASTRAR</button>
+            <button id="button-sign2" @click.prevent="viewModel.submitForm">CADASTRAR</button>
             </router-link>
           </div>
   
