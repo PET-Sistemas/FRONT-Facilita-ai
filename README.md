@@ -1,4 +1,4 @@
-# front-facilitai
+<img src="src\assets\logo.png" alt = "Logo Facilita Ai" width="200">
 
 ## Project setup
 ```
