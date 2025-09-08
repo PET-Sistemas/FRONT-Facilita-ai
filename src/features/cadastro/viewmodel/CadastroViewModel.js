@@ -58,7 +58,7 @@ export default class CadastroViewModel {
             console.log('dados:', userData);
 
             // Substitua a URL abaixo pela URL do backend
-            const response = await axios.post('https://api.seusite.com/cadastrar', userData);
+            const response = await axios.post('http://localhost:8080/post/usuario', userData);
 
             if (response.status === 200) {
                 alert('Cadastro realizado com sucesso!');
