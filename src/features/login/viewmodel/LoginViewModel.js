@@ -5,10 +5,10 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8080'; // Substitua pelo URL do seu back-end
 
-const login = async (email, password) => {
+const login = async (email, senha) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, { email, password });
-        return response.data;
+        const response = await axios.post(`${API_URL}/auth/login`, { email, senha });
+        return response.data.token;
     } catch (error) {
         console.error('Erro ao fazer login:', error);
         throw error;
@@ -22,7 +22,8 @@ export default function useLoginViewModel() {
 
     const handleLogin = async () => {
         try {
-            const result = await login(email.value, password.value);
+            const token = await login(email.value, password.value);
+            localStorage.setItem("jwt_token", token)
             router.push('/inicial_tela'); 
         } catch (error) {
             router.push('/inicial_tela');

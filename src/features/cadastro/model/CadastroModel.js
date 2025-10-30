@@ -1,13 +1,14 @@
 export default class CadastroModel {
-    constructor(name, birthdate, phone, address, selectedState, selectedCity, email, password, confirmation) {
-        this.name = name;
-        this.birthdate = birthdate;
-        this.phone = phone;
-        this.address = address;
-        this.selectedState = selectedState;
-        this.selectedCity = selectedCity;
+    constructor(email, password, role, name, birthdate, address, selectedState, selectedCity, phone, confirmation) {
         this.email = email;
-        this.password = password;
+        this.senha = password;
+        this.role = "USER";
+        this.nomeCompleto = name;
+        this.dataNascimento = birthdate;
+        this.endereco = address;
+        this.cidade = selectedState;
+        this.uf = selectedCity;
+        this.telefone = phone;
         this.confirmation = confirmation;
     }
 }
