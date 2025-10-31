@@ -1,21 +1,38 @@
-import servicesData from '@/test/lista.json';
+import apiClient from '@/plugins/axios'; // Assumindo que você criou este arquivo
 
 export default {
   data() {
     return {
-      services: servicesData.map(service => ({ ...service, solicitado: false })),
+      services: [], // Começa vazio, será preenchido pela API
+      price: 1000, // Valor inicial do filtro de preço
+      priceOrder: 'desc',
+      selectedCategory: '' // <-- ADICIONADO: para o filtro de categoria
     };
   },
   methods: {
+    async fetchServices() {
+      console.debug('fetchServices: iniciando requisição');
+      try {
+        const response = await apiClient.get('/servico/todos');
+        console.debug('fetchServices: resposta recebida', response);
+
+        this.services = response.data.map(service => ({ ...service, solicitado: false }));
+        console.debug('fetchServices: serviços atualizados', this.services.length);
+      } catch (error) {
+        console.error("Erro ao buscar os serviços:", error);
+        this.services = [];
+      }
+    },
+
     toggleSolicitado(service) {
       service.solicitado = !service.solicitado;
     },
-    filterServices(selectedServices, distance, price) {
+
+    // Filtro simplificado para usar apenas o preço (valor)
+    filterServices(price) {
       return this.services.filter(service => {
-        const matchesServiceType = selectedServices.length === 0 || selectedServices.includes(service["Nome do Serviço"].toLowerCase());
-        const matchesDistance = service["Distância em KM"] <= distance;
-        const matchesPrice = service.Preço <= price;
-        return matchesServiceType && matchesDistance && matchesPrice;
+        // Converte o valor para número para garantir a comparação correta
+        return parseFloat(service.valor) <= price;
       });
     }
   }

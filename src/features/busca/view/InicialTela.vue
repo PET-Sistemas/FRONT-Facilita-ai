@@ -4,69 +4,48 @@
     <nav class="sidebar">
       <div class="filter-section">
         <div class="filter-container">
-          <h3>TIPO DE SERVIÇO</h3>
-          <select id="serviceType" class="service-type" v-model="serviceType">
-            <option value="">Selecione</option>
-            <option value="limpeza">Limpeza</option>
-            <option value="construcao">Construção</option>
-            <option value="manutencao">Manutenção</option>
-            <option value="eletrica">Elétrica</option>
-            <option value="hidraulica">Hidráulica</option>
-            <option value="pintura">Estética</option>
+          <h3>CATEGORIA</h3>
+          <select v-model="selectedCategory" class="service-type">
+            <option value="">Todas</option>
+            <option value="Categoria1">Categoria 1</option>
+            <option value="Categoria2">Categoria 2</option>
+            <option value="Limpeza">Limpeza</option>
           </select>
         </div>
+
+        <!-- Filtro de Ordenação por Preço Adicionado -->
         <div class="filter-container">
-          <h3>DISTÂNCIA: {{ distance }} km</h3>
-          <input
-            type="range"
-            v-model="distance"
-            min="0"
-            max="50"
-            step="1"
-            @input="updateSlider($event, 'distance')"
-            :style="getSliderBackground(distance, 50)"
-          />
+          <h3>ORDENAR POR PREÇO</h3>
+          <select v-model="priceOrder" class="service-type">
+            <option value="desc">Maior para Menor</option>
+            <option value="asc">Menor para Maior</option>
+          </select>
         </div>
+
         <div class="filter-container">
-          <h3>PREÇO: R$ {{ formatPrice(price) }}</h3>
+          <h3>PREÇO MÁXIMO: R$ {{ formatPrice(price) }}</h3>
           <input
             type="range"
             v-model="price"
             min="0"
-            max="3000"
-            step="50"
+            max="2000" 
+            step="10"
             @input="updateSlider($event, 'price')"
-            :style="getSliderBackground(price, 3000)"
+            :style="getSliderBackground(price, 2000)"
           />
         </div>
       </div>
     </nav>
     <div class="main-content">
       <div class="filter-rating">
-        <button class="register-button" @click="navigateToServico">Cadastrar Serviço</button>
-        <button class="dropdown-button" @click="toggleDropdown">
-          Ordenar Avaliação
-          <span :class="{'arrow-up': dropdownOpen, 'arrow-down': !dropdownOpen}"></span>
-        </button>
-        <div v-if="dropdownOpen" class="dropdown-menu">
-          <button @click="setRatingOrder('desc')">Maior para Menor</button>
-          <button @click="setRatingOrder('asc')">Menor para Maior</button>
-        </div>
+        <button class="register-button" @click="navigateToService">Cadastrar Serviço</button>
       </div>
       <section class="service-cards">
-        <div v-for="service in filteredServices" :key="service['Nome do Serviço']" class="card">
-          <img :src="service.Imagem" alt="Imagem do Serviço" class="service-image" />
+        <div v-for="service in filteredServices" :key="service.id" class="card">
           <div class="card-text">
-            <h3>{{ service["Nome do Serviço"] }}</h3>
-            <p>{{ service["Nome do Prestador"] }}</p>
-            <p>
-              <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= service['Avaliação em Estrelas'] }">★</span>
-            </p>
-            <div class="price-distance">
-              <p>{{ service["Distância em KM"] }} km</p>
-              <span class="dot">•</span>
-              <p>R$ {{ service.Preço }}</p>
-            </div>
+            <h3>{{ service.titulo }}</h3>
+            <p>{{ service.descricao }}</p>
+            <p class="price">R$ {{ service.valor }}</p>
             <div class="card-footer">
               <button @click="toggleSolicitado(service)" :class="{'solicitado-button': service.solicitado, 'contratar-button': !service.solicitado}">
                 {{ service.solicitado ? 'Solicitado' : 'Contratar' }}
@@ -89,30 +68,37 @@ export default {
   components: {
     HeaderPage
   },
-  data() {
-    return {
-      selectedServices: [],
-      distance: 50,
-      price: 3000,
-      ratingOrder: 'desc',
-      dropdownOpen: false,
-      serviceType: '',
-    };
-  },
+  
   computed: {
     filteredServices() {
-      console.log('Filtrando serviços:', this.services);
-      let services = this.filterServices(this.selectedServices, this.distance, this.price);
-      if (this.ratingOrder === 'asc') {
-        services.sort((a, b) => a['Avaliação em Estrelas'] - b['Avaliação em Estrelas']);
-      } else {
-        services.sort((a, b) => b['Avaliação em Estrelas'] - a['Avaliação em Estrelas']);
-      }
+      // Primeiro, filtra os serviços pelo preço máximo
+      let services = this.filterServices(this.price);
+
+      // Filtra os serviços pela categoria selecionada, se houver
+      //if (this.selectedCategory) {
+        //services = services.filter(service => service.categoria === this.selectedCategory);
+      //}
+
+      // Depois, ordena o resultado
+     // if (this.priceOrder === 'asc') {
+        // Menor para Maior
+      //  services.sort((a, b) => parseFloat(a.valor) - parseFloat(b.valor));
+     // } else {
+        // Maior para Menor (padrão)
+      //  services.sort((a, b) => parseFloat(b.valor) - parseFloat(a.valor));
+     // }
+      
       return services;
     },
   },
   mounted() {
-    console.log('Dados carregados:', this.services);
+    // Chama o mixin que busca os serviços na API
+    if (typeof this.fetchServices === 'function') {
+      this.fetchServices();
+    } else {
+      console.warn('fetchServices não definido - verifique o mixin');
+    }
+    console.log('Dados carregados (após fetch):', this.services);
   },
   methods: {
     sortServices() {
@@ -126,7 +112,7 @@ export default {
       this.sortServices();
       this.dropdownOpen = false;
     },
-    navigateToServico() {
+    navigateToService() {
       this.$router.push('/servico');
     }
   },
@@ -348,15 +334,18 @@ input[type="range"]::-moz-range-track {
 }
 
 .service-cards {
+  padding: 20px;
+  border-radius: 15px; /* Raio de borda mais sutil */
+  border: 1px solid #e0e0e0; /* Borda cinza clara */
+  background-color: #f9f9f9; /* Fundo levemente acinzentado para contraste */
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
 }
 
 .card {
   background-color: #ffffff;
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -539,6 +528,24 @@ solicitado-button:hover {
 
 .register-button:hover {
   background-color: #D9542B;
+}
+
+/* Estilo adicionado para o preço */
+.price {
+  font-weight: bold;
+  color: #067057;
+  font-size: 1.2em;
+  margin-top: 10px;
+}
+
+.card {
+  /* Ajuste para o card sem imagem */
+  align-items: center;
+}
+
+.card-text {
+  /* Garante que o conteúdo ocupe todo o espaço */
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

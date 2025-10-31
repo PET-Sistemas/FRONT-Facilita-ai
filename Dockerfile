@@ -1,13 +1,19 @@
-# Estágio de build
-FROM node:18 as build-stage
+# Usar a imagem do Node como base
+FROM node:18
+
+# Definir o diretório de trabalho dentro do contêiner
 WORKDIR /app
+
+# Copiar o package.json e instalar as dependências
+# Isso aproveita o cache do Docker se as dependências não mudarem
 COPY package*.json ./
 RUN npm install
-COPY . .
-RUN npm run build
 
-# Estágio de produção
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Copiar o resto do código-fonte
+COPY . .
+
+# Expor a porta padrão do servidor de desenvolvimento do Vue
+EXPOSE 8080
+
+# O comando para iniciar o servidor com HMR
+CMD ["npm", "run", "serve"]
