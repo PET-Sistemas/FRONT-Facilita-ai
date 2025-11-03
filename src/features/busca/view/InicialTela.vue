@@ -13,12 +13,11 @@
           </select>
         </div>
 
-        <!-- Filtro de Ordenação por Preço Adicionado -->
         <div class="filter-container">
           <h3>ORDENAR POR PREÇO</h3>
           <select v-model="priceOrder" class="service-type">
-            <option value="desc">Maior para Menor</option>
-            <option value="asc">Menor para Maior</option>
+            <option value="desc">Maior preço</option>
+            <option value="asc">Menor preço</option>
           </select>
         </div>
 
@@ -71,47 +70,27 @@ export default {
   
   computed: {
     filteredServices() {
-      // Primeiro, filtra os serviços pelo preço máximo
       let services = this.filterServices(this.price);
 
-      // Filtra os serviços pela categoria selecionada, se houver
-      //if (this.selectedCategory) {
-        //services = services.filter(service => service.categoria === this.selectedCategory);
-      //}
+      if (this.selectedCategory) {
+        services = services.filter(service => service.categoria === this.selectedCategory);
+      }
 
-      // Depois, ordena o resultado
-     // if (this.priceOrder === 'asc') {
-        // Menor para Maior
-      //  services.sort((a, b) => parseFloat(a.valor) - parseFloat(b.valor));
-     // } else {
-        // Maior para Menor (padrão)
-      //  services.sort((a, b) => parseFloat(b.valor) - parseFloat(a.valor));
-     // }
+      if (this.priceOrder === 'asc') {
+        services.sort((a, b) => parseFloat(a.valor) - parseFloat(b.valor));
+      } else {
+        services.sort((a, b) => parseFloat(b.valor) - parseFloat(a.valor));
+      }
       
       return services;
     },
   },
   mounted() {
-    // Chama o mixin que busca os serviços na API
     if (typeof this.fetchServices === 'function') {
       this.fetchServices();
-    } else {
-      console.warn('fetchServices não definido - verifique o mixin');
     }
-    console.log('Dados carregados (após fetch):', this.services);
   },
   methods: {
-    sortServices() {
-      this.filteredServices; // Trigger computed property to re-evaluate
-    },
-    toggleDropdown() {
-      this.dropdownOpen = !this.dropdownOpen;
-    },
-    setRatingOrder(order) {
-      this.ratingOrder = order;
-      this.sortServices();
-      this.dropdownOpen = false;
-    },
     navigateToService() {
       this.$router.push('/servico');
     }
@@ -136,15 +115,15 @@ header {
 
 .main-container {
   display: flex;
-  height: 100vh; /* Ajuste para garantir que o contêiner ocupe a altura total da tela */
-  overflow: hidden; /* Ensure the container itself does not scroll */
+  height: 100vh; 
+  overflow: hidden; 
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
-  overflow-y: auto; /* Add scroll if necessary */
-  margin-bottom: 10rem; /* Aumenta a margem inferior para 10rem */
+  overflow-y: auto; 
+  margin-bottom: 10rem; 
 }
 
 .search-container {
@@ -223,11 +202,11 @@ svg {
 
 .sidebar {
   width: 250px;
-  height: 100vh; /* Ajuste para garantir que a sidebar ocupe a altura total da tela */
+  height: 100vh; 
   padding: 20px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Add scroll if necessary */
+  overflow-y: auto; 
 }
 
 .filter-section {
@@ -335,9 +314,9 @@ input[type="range"]::-moz-range-track {
 
 .service-cards {
   padding: 20px;
-  border-radius: 15px; /* Raio de borda mais sutil */
-  border: 1px solid #e0e0e0; /* Borda cinza clara */
-  background-color: #f9f9f9; /* Fundo levemente acinzentado para contraste */
+  border-radius: 15px; 
+  border: 1px solid #e0e0e0; 
+  background-color: #f9f9f9; 
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -362,7 +341,7 @@ input[type="range"]::-moz-range-track {
 .card p:nth-child(2) {
   color: #5C5B5B;
   font-family: 'Crete Round', serif;
-  font-size: 18px; /* Diminui o tamanho da fonte para 18px */
+  font-size: 18px; 
 }
 
 .service-image {
@@ -461,7 +440,7 @@ solicitado-button:hover {
   border: solid #024A59;
   border-width: 0 2px 2px 0;
   padding: 3px;
-  align-self: center; /* Align arrow with text */
+  align-self: center; 
 }
 
 .dropdown-button:hover .arrow-up::after,
@@ -482,7 +461,7 @@ solicitado-button:hover {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0; /* Align with the button */
+  right: 0; 
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -530,7 +509,7 @@ solicitado-button:hover {
   background-color: #D9542B;
 }
 
-/* Estilo adicionado para o preço */
+
 .price {
   font-weight: bold;
   color: #067057;
@@ -539,12 +518,10 @@ solicitado-button:hover {
 }
 
 .card {
-  /* Ajuste para o card sem imagem */
   align-items: center;
 }
 
 .card-text {
-  /* Garante que o conteúdo ocupe todo o espaço */
   justify-content: center;
 }
 

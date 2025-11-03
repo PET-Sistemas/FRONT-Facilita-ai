@@ -4,8 +4,8 @@ export default {
       address: 'Endereço Atual',
       newAddress: '',
       isEditing: false,
-      price: 2000, // Valor inicial do filtro de preço
-      priceOrder: 'desc' // 'desc' para Maior para Menor, 'asc' para Menor para Maior
+      price: 2000,
+      priceOrder: 'desc'
     };
   },
   watch: {
@@ -21,14 +21,11 @@ export default {
       };
     },
     updateSlider(event, type) {
-      // Lógica simplificada para cuidar apenas do preço
       if (type === 'price') {
         this.price = parseInt(event.target.value);
       }
     },
-    filterResults() {
-      console.log('Filtrando por preço máximo:', this.price);
-    },
+    filterResults() { },
     formatPrice(price) {
       return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     },
