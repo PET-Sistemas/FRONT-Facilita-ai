@@ -1,72 +1,50 @@
 <template>
-    <HeaderPage />
+    <HeaderPage @search="updateSearchTerm" />
   <div class="main-container">
     <nav class="sidebar">
       <div class="filter-section">
         <div class="filter-container">
-          <h3>TIPO DE SERVIÇO</h3>
-          <select id="serviceType" class="service-type" v-model="serviceType">
-            <option value="">Selecione</option>
-            <option value="limpeza">Limpeza</option>
-            <option value="construcao">Construção</option>
-            <option value="manutencao">Manutenção</option>
-            <option value="eletrica">Elétrica</option>
-            <option value="hidraulica">Hidráulica</option>
-            <option value="pintura">Estética</option>
+          <h3>CATEGORIA</h3>
+          <select v-model="selectedCategory" class="service-type">
+            <option value="">Todas</option>
+            <option v-for="category in categories" :key="category" :value="category">
+              {{ category }}
+            </option>
           </select>
         </div>
+
         <div class="filter-container">
-          <h3>DISTÂNCIA: {{ distance }} km</h3>
-          <input
-            type="range"
-            v-model="distance"
-            min="0"
-            max="50"
-            step="1"
-            @input="updateSlider($event, 'distance')"
-            :style="getSliderBackground(distance, 50)"
-          />
+          <h3>ORDENAR POR PREÇO</h3>
+          <select v-model="priceOrder" class="service-type">
+            <option value="desc">Maior preço</option>
+            <option value="asc">Menor preço</option>
+          </select>
         </div>
+
         <div class="filter-container">
-          <h3>PREÇO: R$ {{ formatPrice(price) }}</h3>
+          <h3>PREÇO MÁXIMO: R$ {{ formatPrice(price) }}</h3>
           <input
             type="range"
             v-model="price"
             min="0"
-            max="3000"
-            step="50"
+            max="2000" 
+            step="10"
             @input="updateSlider($event, 'price')"
-            :style="getSliderBackground(price, 3000)"
+            :style="getSliderBackground(price, 2000)"
           />
         </div>
       </div>
     </nav>
     <div class="main-content">
       <div class="filter-rating">
-        <button class="register-button" @click="navigateToServico">Cadastrar Serviço</button>
-        <button class="dropdown-button" @click="toggleDropdown">
-          Ordenar Avaliação
-          <span :class="{'arrow-up': dropdownOpen, 'arrow-down': !dropdownOpen}"></span>
-        </button>
-        <div v-if="dropdownOpen" class="dropdown-menu">
-          <button @click="setRatingOrder('desc')">Maior para Menor</button>
-          <button @click="setRatingOrder('asc')">Menor para Maior</button>
-        </div>
+        <button class="register-button" @click="navigateToService">Cadastrar Serviço</button>
       </div>
       <section class="service-cards">
-        <div v-for="service in filteredServices" :key="service['Nome do Serviço']" class="card">
-          <img :src="service.Imagem" alt="Imagem do Serviço" class="service-image" />
+        <div v-for="service in filteredServices" :key="service.id" class="card">
           <div class="card-text">
-            <h3>{{ service["Nome do Serviço"] }}</h3>
-            <p>{{ service["Nome do Prestador"] }}</p>
-            <p>
-              <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= service['Avaliação em Estrelas'] }">★</span>
-            </p>
-            <div class="price-distance">
-              <p>{{ service["Distância em KM"] }} km</p>
-              <span class="dot">•</span>
-              <p>R$ {{ service.Preço }}</p>
-            </div>
+            <h3>{{ service.titulo }}</h3>
+            <p>{{ service.descricao }}</p>
+            <p class="price">R$ {{ service.valor }}</p>
             <div class="card-footer">
               <button @click="toggleSolicitado(service)" :class="{'solicitado-button': service.solicitado, 'contratar-button': !service.solicitado}">
                 {{ service.solicitado ? 'Solicitado' : 'Contratar' }}
@@ -89,44 +67,37 @@ export default {
   components: {
     HeaderPage
   },
-  data() {
-    return {
-      selectedServices: [],
-      distance: 50,
-      price: 3000,
-      ratingOrder: 'desc',
-      dropdownOpen: false,
-      serviceType: '',
-    };
-  },
+  
   computed: {
     filteredServices() {
-      console.log('Filtrando serviços:', this.services);
-      let services = this.filterServices(this.selectedServices, this.distance, this.price);
-      if (this.ratingOrder === 'asc') {
-        services.sort((a, b) => a['Avaliação em Estrelas'] - b['Avaliação em Estrelas']);
-      } else {
-        services.sort((a, b) => b['Avaliação em Estrelas'] - a['Avaliação em Estrelas']);
+      let services = this.filterServices(this.price, this.searchTerm);
+
+      if (this.selectedCategory) {
+        services = services.filter(service => service.categoriaNome === this.selectedCategory);
       }
+
+      if (this.priceOrder === 'asc') {
+        services.sort((a, b) => parseFloat(a.valor) - parseFloat(b.valor));
+      } else {
+        services.sort((a, b) => parseFloat(b.valor) - parseFloat(a.valor));
+      }
+      
       return services;
     },
   },
   mounted() {
-    console.log('Dados carregados:', this.services);
+    if (typeof this.fetchServices === 'function') {
+      this.fetchServices();
+    }
+    if (typeof this.fetchCategories === 'function') {
+      this.fetchCategories();
+    }
   },
   methods: {
-    sortServices() {
-      this.filteredServices; // Trigger computed property to re-evaluate
+    updateSearchTerm(term) {
+      this.searchTerm = term;
     },
-    toggleDropdown() {
-      this.dropdownOpen = !this.dropdownOpen;
-    },
-    setRatingOrder(order) {
-      this.ratingOrder = order;
-      this.sortServices();
-      this.dropdownOpen = false;
-    },
-    navigateToServico() {
+    navigateToService() {
       this.$router.push('/servico');
     }
   },
@@ -150,15 +121,15 @@ header {
 
 .main-container {
   display: flex;
-  height: 100vh; /* Ajuste para garantir que o contêiner ocupe a altura total da tela */
-  overflow: hidden; /* Ensure the container itself does not scroll */
+  height: 100vh; 
+  overflow: hidden; 
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
-  overflow-y: auto; /* Add scroll if necessary */
-  margin-bottom: 10rem; /* Aumenta a margem inferior para 10rem */
+  overflow-y: auto; 
+  margin-bottom: 10rem; 
 }
 
 .search-container {
@@ -237,11 +208,11 @@ svg {
 
 .sidebar {
   width: 250px;
-  height: 100vh; /* Ajuste para garantir que a sidebar ocupe a altura total da tela */
+  height: 100vh; 
   padding: 20px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Add scroll if necessary */
+  overflow-y: auto; 
 }
 
 .filter-section {
@@ -348,15 +319,18 @@ input[type="range"]::-moz-range-track {
 }
 
 .service-cards {
+  padding: 20px;
+  border-radius: 15px; 
+  border: 1px solid #e0e0e0; 
+  background-color: #f9f9f9; 
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
 }
 
 .card {
   background-color: #ffffff;
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -373,7 +347,7 @@ input[type="range"]::-moz-range-track {
 .card p:nth-child(2) {
   color: #5C5B5B;
   font-family: 'Crete Round', serif;
-  font-size: 18px; /* Diminui o tamanho da fonte para 18px */
+  font-size: 18px; 
 }
 
 .service-image {
@@ -472,7 +446,7 @@ solicitado-button:hover {
   border: solid #024A59;
   border-width: 0 2px 2px 0;
   padding: 3px;
-  align-self: center; /* Align arrow with text */
+  align-self: center; 
 }
 
 .dropdown-button:hover .arrow-up::after,
@@ -493,7 +467,7 @@ solicitado-button:hover {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0; /* Align with the button */
+  right: 0; 
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -539,6 +513,22 @@ solicitado-button:hover {
 
 .register-button:hover {
   background-color: #D9542B;
+}
+
+
+.price {
+  font-weight: bold;
+  color: #067057;
+  font-size: 1.2em;
+  margin-top: 10px;
+}
+
+.card {
+  align-items: center;
+}
+
+.card-text {
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

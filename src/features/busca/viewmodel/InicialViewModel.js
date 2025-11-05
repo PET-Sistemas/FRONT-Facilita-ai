@@ -1,21 +1,17 @@
 export default {
   data() {
     return {
-      address: 'Endereço Atual', 
-      newAddress: '', 
+      address: 'Endereço Atual',
+      newAddress: '',
       isEditing: false,
-      serviceType: '',
-      distance: 25,
-      price: 500
+      price: 2000,
+      priceOrder: 'desc',
+      categories: [],
+      selectedCategory: '',
+      searchTerm: ''
     };
   },
   watch: {
-    serviceType() {
-      this.filterResults();
-    },
-    distance() {
-      this.filterResults();
-    },
     price() {
       this.filterResults();
     }
@@ -28,15 +24,11 @@ export default {
       };
     },
     updateSlider(event, type) {
-      if (type === 'distance') {
-        this.distance = parseInt(event.target.value);
-      } else {
+      if (type === 'price') {
         this.price = parseInt(event.target.value);
       }
     },
-    filterResults() {
-      console.log('Filtrando por:', this.serviceType, this.distance, this.price);
-    },
+    filterResults() { },
     formatPrice(price) {
       return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     },
@@ -44,7 +36,7 @@ export default {
       this.isEditing = !this.isEditing;
       if (this.isEditing) {
         this.$nextTick(() => {
-          this.$refs.addressInput.focus(); 
+          this.$refs.addressInput.focus();
         });
       }
     },
