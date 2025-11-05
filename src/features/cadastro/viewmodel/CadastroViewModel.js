@@ -3,14 +3,15 @@ import CadastroModel from '../model/CadastroModel';
 
 export default class CadastroViewModel {
     constructor() {
-        this.name = '';
-        this.birthdate = '';
-        this.phone = '';
-        this.address = '';
-        this.selectedState = '';
-        this.selectedCity = '';
         this.email = '';
-        this.password = '';
+        this.senha = '';
+        this.role = 'USER';
+        this.nomeCompleto = '';
+        this.dataNascimento = '';
+        this.endereco = '';
+        this.selectedCity = '';
+        this.selectedState = '';
+        this.telefone = '';
         this.confirmation = '';
         this.states = [];
         this.cities = [];
@@ -37,28 +38,29 @@ export default class CadastroViewModel {
     }
 
     async submitForm() {
-        if (this.password !== this.confirmation) {
+        if (this.senha !== this.confirmation) {
             alert('As senhas não coincidem.');
             return;
         }
 
         try {
             const userData = new CadastroModel(
-                this.name,
-                this.birthdate,
-                this.phone,
-                this.address,
-                this.selectedState,
-                this.selectedCity,
                 this.email,
-                this.password,
+                this.senha,
+                this.role,
+                this.nomeCompleto,
+                this.dataNascimento,
+                this.endereco,
+                this.selectedCity,
+                this.selectedState,
+                this.telefone,
                 this.confirmation
             );
 
             console.log('dados:', userData);
 
             // Substitua a URL abaixo pela URL do backend
-            const response = await axios.post('http://localhost:8080/post/usuario', userData);
+            const response = await axios.post('http://localhost:8080/auth/register', userData);
 
             if (response.status === 200) {
                 alert('Cadastro realizado com sucesso!');
