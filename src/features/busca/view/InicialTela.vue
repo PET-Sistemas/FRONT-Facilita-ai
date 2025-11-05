@@ -1,5 +1,5 @@
 <template>
-    <HeaderPage />
+    <HeaderPage @search="updateSearchTerm" />
   <div class="main-container">
     <nav class="sidebar">
       <div class="filter-section">
@@ -7,9 +7,9 @@
           <h3>CATEGORIA</h3>
           <select v-model="selectedCategory" class="service-type">
             <option value="">Todas</option>
-            <option value="Categoria1">Categoria 1</option>
-            <option value="Categoria2">Categoria 2</option>
-            <option value="Limpeza">Limpeza</option>
+            <option v-for="category in categories" :key="category" :value="category">
+              {{ category }}
+            </option>
           </select>
         </div>
 
@@ -70,10 +70,10 @@ export default {
   
   computed: {
     filteredServices() {
-      let services = this.filterServices(this.price);
+      let services = this.filterServices(this.price, this.searchTerm);
 
       if (this.selectedCategory) {
-        services = services.filter(service => service.categoria === this.selectedCategory);
+        services = services.filter(service => service.categoriaNome === this.selectedCategory);
       }
 
       if (this.priceOrder === 'asc') {
@@ -89,8 +89,14 @@ export default {
     if (typeof this.fetchServices === 'function') {
       this.fetchServices();
     }
+    if (typeof this.fetchCategories === 'function') {
+      this.fetchCategories();
+    }
   },
   methods: {
+    updateSearchTerm(term) {
+      this.searchTerm = term;
+    },
     navigateToService() {
       this.$router.push('/servico');
     }

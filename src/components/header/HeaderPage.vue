@@ -6,7 +6,7 @@
     <div class="main-content">
       <div class="search-input">
         <div class="search-container">
-          <input type="text" id="search" placeholder="Descreva o que precisa...">
+          <input type="text" id="search" placeholder="Descreva o que precisa..." v-model="searchTerm" @input="onSearchInput">
           <img src="@/assets/lupa.png" alt="Search Icon" class="search-icon">
         </div>
       </div>
@@ -30,9 +30,13 @@ export default {
   data() {
     return {
       showDropdown: false,
+      searchTerm: '',
     };
   },
   methods: {
+    onSearchInput() {
+      this.$emit('search', this.searchTerm);
+    },
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
     },
@@ -42,7 +46,6 @@ export default {
       this.$router.push('/');
     },
     goToProfile() {
-      // Implement navigation to profile functionality
       console.log('Perfil clicked');
       this.$router.push('/profile');
     }
@@ -80,7 +83,7 @@ header {
 }
 
 #search {
-  padding-right: 40px; /* Espaço para o ícone */
+  padding-right: 40px;
 }
 
 .search-icon {
@@ -124,9 +127,9 @@ svg {
 
 .dropdown-menu {
   position: absolute;
-  top: 75px; /* Adjusted to be directly below the icon */
-  left: 20%; /* Center the dropdown */
-  transform: translateX(-50%); /* Center the dropdown */
+  top: 75px;
+  left: 20%;
+  transform: translateX(-50%);
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;

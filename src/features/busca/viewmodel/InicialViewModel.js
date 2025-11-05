@@ -5,7 +5,10 @@ export default {
       newAddress: '',
       isEditing: false,
       price: 2000,
-      priceOrder: 'desc'
+      priceOrder: 'desc',
+      categories: [],
+      selectedCategory: '',
+      searchTerm: ''
     };
   },
   watch: {
