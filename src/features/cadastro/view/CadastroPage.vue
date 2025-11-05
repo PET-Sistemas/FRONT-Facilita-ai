@@ -5,24 +5,24 @@
           <div id="title">Cadastrar</div>
           <div class="name-field">
             <label for="name">Nome completo</label>
-            <input type="text" id="name" placeholder="" v-model="viewModel.name" />
+            <input type="text" id="name" placeholder="" v-model="viewModel.nomeCompleto" />
           </div>
   
           <div class="double-field">
             <div class="data-field">
               <label for="datanascimento">Data de nascimento</label>
-              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="viewModel.birthdate" placeholder="DD/MM/AAAA">
+              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="viewModel.dataNascimento" placeholder="DD/MM/AAAA">
             </div>
         
             <div class="phone-field">
               <label for="phone">Telefone</label>
-              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.phone" />
+              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.telefone" />
             </div>
         </div>
 
          <div class="address-field">
             <label for="address">Endereço</label>
-            <input type="text" id="address" placeholder="" v-model="viewModel.address" />
+            <input type="text" id="address" placeholder="" v-model="viewModel.endereco" />
           </div>
   
           <div class="double-field">
@@ -54,7 +54,7 @@
           <div class="double-field">
             <div class="password-field">
               <label for="password">Senha</label>
-              <input type="password" id="password" placeholder="" v-model="viewModel.password" />
+              <input type="password" id="password" placeholder="" v-model="viewModel.senha" />
             </div>
             <div class="confirmation">
               <label for="confirmation">Confirmar senha</label>

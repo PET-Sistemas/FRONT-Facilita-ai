@@ -41,12 +41,10 @@ export default {
       this.showDropdown = !this.showDropdown;
     },
     logout() {
-      // Implement logout functionality
-      console.log('Logout clicked');
+      localStorage.removeItem('jwt_token')
       this.$router.push('/');
     },
     goToProfile() {
-      console.log('Perfil clicked');
       this.$router.push('/profile');
     }
   }
