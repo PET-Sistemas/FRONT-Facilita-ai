@@ -98,7 +98,7 @@ export default {
       this.searchTerm = term;
     },
     navigateToService() {
-      this.$router.push('/servico');
+      this.$router.push('/servico/cadastrar');
     }
   },
 };
