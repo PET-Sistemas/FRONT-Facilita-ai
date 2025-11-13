@@ -1,18 +1,21 @@
 export default class ProfileModel {
-  constructor(userData) {
-    this.user = { ...userData };
-    this.originalUser = { ...userData };
+  constructor(data) {
+    // mantém todos os dados vindos do backend
+    this.user = { ...data };
+
+    // salva backup pra poder reverter
+    this.originalUser = structuredClone(data);
   }
 
   updateUserData(newData) {
-    this.user = { ...this.user, ...newData };
+    Object.assign(this.user, newData);
   }
 
   revertChanges() {
-    this.user = { ...this.originalUser };
+    this.user = structuredClone(this.originalUser);
   }
 
   saveChanges() {
-    this.originalUser = { ...this.user };
+    this.originalUser = structuredClone(this.user);
   }
 }

@@ -1,19 +1,13 @@
-# Usar a imagem do Node como base
-FROM node:18
-
-# Definir o diretório de trabalho dentro do contêiner
+# Estágio 1: Build (Compila o Vue)
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Copiar o package.json e instalar as dependências
-# Isso aproveita o cache do Docker se as dependências não mudarem
 COPY package*.json ./
 RUN npm install
-
-# Copiar o resto do código-fonte
 COPY . .
+RUN npm run build
 
-# Expor a porta padrão do servidor de desenvolvimento do Vue
-EXPOSE 8080
-
-# O comando para iniciar o servidor com HMR
-CMD ["npm", "run", "serve"]
+# Estágio 2: Serve (Usa o Nginx)
+FROM nginx:1.23-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
