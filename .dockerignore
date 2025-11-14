@@ -1,2 +1,21 @@
+# Ignora a pasta de dependências do Node
 node_modules
+
+# Ignora logs
+*.log
 npm-debug.log
+
+# Ignora arquivos de build/distribuição (serão gerados DENTRO do container)
+dist
+build
+
+# Ignora o histórico do Git
+.git
+
+# Ignora arquivos de variáveis de ambiente
+.env
+.env.local
+
+# O próprio dockerignore e o Dockerfile não precisam ir para o contexto
+.dockerignore
+Dockerfile

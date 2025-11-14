@@ -1,20 +1,37 @@
-import ProfileModel from '../model/ProfileModel';
-import axios from 'axios';
+import ProfileModel from "../model/ProfileModel";
 
 export default class ProfileViewModel {
-  constructor(userData) {
-    this.profileModel = new ProfileModel(userData);
-    this.isEditing = false;
-    this.images = [
-      "https://via.placeholder.com/800x400",
-      "https://via.placeholder.com/800x400",
-      "https://via.placeholder.com/800x400"
-    ];
-    this.currentIndex = 0;
+  apiClient;
+  isEditing = false;
+  profileModel = null;
+  images = [
+    "https://via.placeholder.com/800x400",
+    "https://via.placeholder.com/800x400",
+    "https://via.placeholder.com/800x400",
+  ];
+  currentIndex = 0;
+
+  constructor(apiClient) {
+    this.apiClient = apiClient;
+  }
+
+  /**
+   * Busca os dados do usuário e retorna o modelo reativo.
+   * @returns {Promise<object|null>} user
+   */
+  async fetchUserData() {
+    try {
+      const response = await this.apiClient.get("/usuario/me");
+      this.profileModel = new ProfileModel(response.data);
+      return this.profileModel.user;
+    } catch (error) {
+      console.error("Erro ao buscar dados do usuário:", error);
+      return null;
+    }
   }
 
   getUser() {
-    return this.profileModel.user;
+    return this.profileModel ? this.profileModel.user : null;
   }
 
   getImages() {
@@ -25,32 +42,42 @@ export default class ProfileViewModel {
     return this.currentIndex;
   }
 
-  toggleEdit() {
+  async toggleEdit() {
     if (this.isEditing) {
-      this.profileModel.saveChanges();
+      await this.saveData();
+    } else {
+      this.isEditing = true;
     }
-    this.isEditing = !this.isEditing;
   }
 
   cancelEdit() {
-    this.profileModel.revertChanges();
+    if (this.profileModel) {
+      this.profileModel.revertChanges();
+    }
     this.isEditing = false;
   }
 
   async saveData() {
     try {
-      const response = await axios.put('http://localhost:3000/user', this.profileModel.user);
+      const response = await this.apiClient.put(
+        "/usuario/me",
+        this.profileModel.user
+      );
+      this.profileModel.user = response.data;
       this.profileModel.saveChanges();
+
       this.isEditing = false;
-      alert(response.data.message);
+      alert("Dados salvos com sucesso!");
     } catch (error) {
-      console.error('Erro ao salvar os dados:', error);
-      alert('Erro ao salvar os dados.');
+      console.error("Erro ao salvar os dados:", error);
+      alert("Erro ao salvar os dados.");
     }
   }
 
   updateUserData(newData) {
-    this.profileModel.updateUserData(newData);
+    if (this.profileModel) {
+      this.profileModel.updateUserData(newData);
+    }
   }
 
   nextSlide() {
