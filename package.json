@@ -11,6 +11,7 @@
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
     "front-facilitai": "file:",
+    "v-money3": "^3.24.1",
     "vue": "^3.2.13",
     "vue-router": "^4.4.3",
     "vue-the-mask": "^0.11.1"
