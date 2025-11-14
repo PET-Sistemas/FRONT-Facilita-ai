@@ -108,7 +108,7 @@ export default {
       try {
         await this.submitService(serviceData);
         alert("Serviço cadastrado com sucesso!");
-        this.$router.push('/'); // Redireciona para a home após o sucesso
+        this.$router.push('/inicial_tela'); 
       } catch (error) {
         alert("Falha ao cadastrar o serviço. Tente novamente.");
       }
