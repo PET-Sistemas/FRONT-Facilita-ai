@@ -7,9 +7,11 @@ const CadastroPage = () => import('../features/cadastro/view/CadastroPage.vue');
 const InicialTela = () => import('../features/busca/view/InicialTela.vue');
 const ProfilePage = () => import('../features/perfil/view/ProfilePage.vue');
 const CadastroServicoTela = () => import('../features/cadastroServico/view/CadastroServicoTela.vue');
+const ServicoDetalheTela = () => import('../features/servico/view/ServicoDetalheTela.vue');
 
 // Obter a URL base a partir da variável de ambiente
 const baseUrl = process.env.VUE_APP_BASE_URL || '/';
+
 
 const router = createRouter({
   history: createWebHistory(baseUrl),
@@ -38,6 +40,12 @@ const router = createRouter({
       path: '/servico/cadastrar',
       name: 'cadastroServico',
       component: CadastroServicoTela,
+    },
+    {
+      path: '/servico/:id',
+      name: 'servicoDetalhe',
+      component: ServicoDetalheTela,
+      props: true
     },
   ],
 });
