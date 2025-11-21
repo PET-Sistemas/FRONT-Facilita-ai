@@ -40,18 +40,20 @@
         <button class="register-button" @click="navigateToService">Cadastrar Serviço</button>
       </div>
       <section class="service-cards">
-        <div v-for="service in filteredServices" :key="service.id" class="card">
-          <div class="card-text">
-            <h3>{{ service.titulo }}</h3>
-            <p>{{ service.descricao }}</p>
-            <p class="price">R$ {{ service.valor }}</p>
-            <div class="card-footer">
-              <button @click="toggleSolicitado(service)" :class="{'solicitado-button': service.solicitado, 'contratar-button': !service.solicitado}">
-                {{ service.solicitado ? 'Solicitado' : 'Contratar' }}
-              </button>
+        <router-link v-for="service in filteredServices" :key="service.id" :to="'/servico/' + service.id" class="card-link">
+          <div class="card">
+            <div class="card-text">
+              <h3>{{ service.titulo }}</h3>
+              <p>{{ service.descricao }}</p>
+              <p class="price">R$ {{ service.valor }}</p>
+              <div class="card-footer">
+                <button class="contratar-button">
+                  Contratar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </router-link>
       </section>
     </div>
   </div>
@@ -525,6 +527,11 @@ solicitado-button:hover {
 
 .card {
   align-items: center;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .card-text {
