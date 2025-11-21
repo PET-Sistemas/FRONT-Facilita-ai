@@ -12,19 +12,19 @@
       <div v-else class="profile-card">
         <div class="picture-container">
           <img
-            :src="user.profilePicture || '/default-avatar.png'"
+            :src="user.profilePicture"
             alt="Foto do Usuário"
             class="profile-picture"
           />
           <div v-if="isEditing">
-            <label for="profilePictureUpload" class="button">
+            <label for="fotoPerfilUpload" class="button">
               <img src="@/assets/lapis.png" />
             </label>
             <input
-              id="profilePictureUpload"
+              id="fotoPerfilUpload"
               type="file"
               accept="image/*"
-              @change="uploadProfilePicture"
+              @change="uploadfotoPerfil"
               style="display: none"
             />
           </div>
@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import userData from "@/plugins/axios.js";
 import ProfileViewModel from "../viewmodel/ProfileViewModel";
 import HeaderPage from "@/components/header/HeaderPage.vue";
@@ -125,10 +125,11 @@ export default {
     const loading = ref(true);
 
     const user = ref({
-      name: "",
+      id: null,
+      nomeCompleto: "",
       email: "",
-      phone: "",
-      location: "",
+      telefone: "",
+      endereco: "",
       profilePicture: "",
       stars: 0,
     });
@@ -136,30 +137,59 @@ export default {
     onMounted(async () => {
       const loadedUser = await viewModel.fetchUserData();
       if (loadedUser) user.value = loadedUser;
+
+      const fotoUrl = await viewModel.fetchFoto();
+      if (fotoUrl) {
+        user.value.profilePicture = fotoUrl;
+      }
+      console.log(user.value.profilePicture);
       loading.value = false;
     });
 
     const saveData = async () => {
       await viewModel.saveData();
+      // sincroniza user local com o profileModel atualizado
+      if (viewModel.profileModel) user.value = viewModel.profileModel.user;
+    };
+
+    // torna isEditing reativo via computed que lê viewModel
+    const isEditing = computed(() => viewModel.isEditing);
+
+    const uploadProfilePicture = async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // aqui escolha a opção:
+      // se seu backend usa usuário logado:
+      await viewModel.uploadProfilePicture(file, { useAuthUser: true });
+
+      // se seu backend espera userId:
+      // await viewModel.uploadProfilePicture(file, { useAuthUser: false, userId: user.value.id });
+
+      // atualiza user local com o que foi salvo no viewModel
+      if (viewModel.profileModel) {
+        user.value = { ...viewModel.profileModel.user };
+      }
     };
 
     return {
       viewModel,
       loading,
       user,
-      isEditing: viewModel.isEditing,
+      isEditing,
       images: viewModel.getImages(),
       currentIndex: viewModel.getCurrentIndex(),
-      trackTransform: `translateX(-${viewModel.getCurrentIndex() * 100}%)`,
+      trackTransform: computed(
+        () => `translateX(-${viewModel.getCurrentIndex() * 100}%)`
+      ),
       saveData,
-      toggleEdit: () => viewModel.toggleEdit(),
+      toggleEdit: async () => {
+        await viewModel.toggleEdit();
+      },
       cancelEdit: () => viewModel.cancelEdit(),
       nextSlide: () => viewModel.nextSlide(),
       prevSlide: () => viewModel.prevSlide(),
-      uploadProfilePicture: (event) => {
-        const file = event.target.files[0];
-        viewModel.uploadProfilePicture(file);
-      },
+      uploadProfilePicture,
     };
   },
 };
