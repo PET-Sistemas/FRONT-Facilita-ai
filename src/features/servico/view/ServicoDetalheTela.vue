@@ -14,7 +14,7 @@
             <span class="stars">{{ getStarRating(servico.prestador.mediaAvaliacoes) }}</span>
             <span class="rating-feedback">({{ servico.prestador.totalAvaliacoes }} avaliações)</span>
           </div>
-          <button class="avaliacoes-btn">Ver Avaliações</button>
+          <button class="avaliacoes-btn" @click="navigateToAvaliacoes">Ver Avaliações</button>
         </div>
 
         <p class="preco">Serviço a partir de: <strong>R$ {{ servico.valor.toFixed(2) }}</strong></p>
@@ -54,6 +54,9 @@ export default {
     };
   },
   methods: {
+    navigateToAvaliacoes() {
+      this.$router.push({ name: 'avaliacoesServico', params: { id: this.servico.id } });
+    },
     async loadServiceDetails() {
       this.isLoading = true;
       try {

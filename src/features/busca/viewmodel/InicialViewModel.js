@@ -29,8 +29,11 @@ export default {
       }
     },
     filterResults() { },
-    formatPrice(price) {
-      return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    formatPrice(value) {
+      if (typeof value !== 'number') {
+        value = Number(value);
+      }
+      return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     },
     toggleEdit() {
       this.isEditing = !this.isEditing;
