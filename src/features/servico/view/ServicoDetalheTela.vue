@@ -18,7 +18,10 @@
               >({{ servico.prestador.totalAvaliacoes }} avaliações)</span
             >
           </div>
-          <button class="avaliacoes-btn" @click="navigateToAvaliacoes">Ver Avaliações</button>
+          <div class="button-group">
+            <button class="avaliacoes-btn" @click="navigateToAvaliacoes">Ver Avaliações</button>
+            <button class="avaliar-btn" @click="navigateToAvaliar">Avaliar Serviço</button>
+          </div>
         </div>
 
         <p class="preco">
@@ -67,6 +70,9 @@ export default {
   methods: {
     navigateToAvaliacoes() {
       this.$router.push({ name: 'avaliacoesServico', params: { id: this.servico.id } });
+    },
+    navigateToAvaliar() {
+      this.$router.push({ name: 'avaliarServico', params: { id: this.servico.id } });
     },
     async loadServiceDetails() {
       this.isLoading = true;
@@ -201,6 +207,22 @@ h1 {
   color: white;
 }
 
+/* Novo estilo para o botão de avaliar serviço */
+.avaliar-btn {
+  background-color: #F26530;
+  color: white;
+  border: 1px solid #F26530;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.avaliar-btn:hover {
+  background-color: #d9531e;
+  border-color: #d9531e;
+}
+
 /* Preço */
 .preco {
   font-size: 1.1em;
@@ -282,5 +304,11 @@ h3 {
   font-size: 1.5em;
   padding: 2rem;
   color: #6c757d;
+}
+
+/* Novo estilo para o grupo de botões */
+.button-group {
+  display: flex;
+  gap: 1rem;
 }
 </style>
