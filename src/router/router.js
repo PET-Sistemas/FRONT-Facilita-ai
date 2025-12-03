@@ -50,6 +50,12 @@ const router = createRouter({
       component: ServicoDetalheTela,
       props: true,
     },
+    {
+      path: '/servico/:id/avaliacoes',
+      name: 'avaliacoesServico',
+      component: AvaliacoesTela,
+      props: true
+    },
   ],
 });
 router.beforeEach((to, from, next) => {

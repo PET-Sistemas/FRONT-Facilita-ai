@@ -18,7 +18,7 @@
               >({{ servico.prestador.totalAvaliacoes }} avaliações)</span
             >
           </div>
-          <button class="avaliacoes-btn">Ver Avaliações</button>
+          <button class="avaliacoes-btn" @click="navigateToAvaliacoes">Ver Avaliações</button>
         </div>
 
         <p class="preco">
@@ -65,6 +65,9 @@ export default {
     };
   },
   methods: {
+    navigateToAvaliacoes() {
+      this.$router.push({ name: 'avaliacoesServico', params: { id: this.servico.id } });
+    },
     async loadServiceDetails() {
       this.isLoading = true;
       try {

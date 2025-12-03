@@ -7,11 +7,8 @@
           <h3>CATEGORIA</h3>
           <select v-model="selectedCategory" class="service-type">
             <option value="">Todas</option>
-            <option
-              v-for="category in categories"
-              :key="category"
-              :value="category"
-            >
+            <!-- Loop dinâmico para criar as opções -->
+            <option v-for="category in categories" :key="category" :value="category">
               {{ category }}
             </option>
           </select>
@@ -50,23 +47,21 @@
         </button>
       </div>
       <section class="service-cards">
-        <router-link
-          v-for="service in filteredServices"
-          :key="service.id"
-          :to="'/servico/' + service.id"
-          class="card-link"
-        >
-          <div class="card">
+        <!-- O v-for agora está na div do card, e o router-link foi removido daqui -->
+        <div v-for="service in filteredServices" :key="service.id" class="card">
             <div class="card-text">
-              <h3>{{ service.titulo }}</h3>
+              <!-- O título agora é clicável -->
+              <h3 @click="navigateToDetail(service.id)" class="service-title">{{ service.titulo }}</h3>
               <p>{{ service.descricao }}</p>
-              <p class="price">R$ {{ service.valor }}</p>
+              <p class="price">R$ {{ formatPrice(service.valor) }}</p>
               <div class="card-footer">
-                <button class="contratar-button">Contratar</button>
+                <!-- O botão agora é clicável -->
+                <button @click="navigateToDetail(service.id)" class="contratar-button">
+                  Contratar
+                </button>
               </div>
             </div>
           </div>
-        </router-link>
       </section>
     </div>
   </div>
@@ -129,8 +124,12 @@ export default {
       this.searchTerm = term;
     },
     navigateToService() {
-      this.$router.push("/servico/cadastrar");
+      this.$router.push('/servico/cadastrar');
     },
+    // Novo método para navegar para os detalhes do serviço
+    navigateToDetail(serviceId) {
+      this.$router.push('/servico/' + serviceId);
+    }
   },
 };
 </script>
@@ -558,13 +557,18 @@ solicitado-button:hover {
   align-items: center;
 }
 
-.card-link {
-  text-decoration: none;
-  color: inherit;
-}
-
 .card-text {
   justify-content: center;
+}
+
+.service-title {
+  cursor: pointer;
+  /* text-decoration: underline; */ /* Removido */
+  color: #024A59;
+}
+
+.service-title:hover {
+  color: #067057;
 }
 
 @media (max-width: 768px) {
