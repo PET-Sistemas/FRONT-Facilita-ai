@@ -6,21 +6,22 @@
 </template>
 
 <script>
-import LoginPage from '../components/LoginPage.vue';
-import BemVindo from '../components/BemVindo.vue';
+import LoginPage from "../components/LoginPage.vue";
+import BemVindo from "../components/BemVindo.vue";
 
 export default {
-  name: 'HomePage',
+  name: "HomePage",
   components: {
     BemVindo,
-    LoginPage 
-  }
+    LoginPage,
+  },
 };
 </script>
 
 <style scoped>
-
-html, body, #app {
+html,
+body,
+#app {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -37,12 +38,12 @@ html, body, #app {
 }
 
 .bem-vindo {
-  flex: 0 0 55vw; 
+  flex: 0 0 55vw;
   height: 100%;
 }
 
 .login-page {
-  flex: 0 0 45vw; 
+  flex: 0 0 45vw;
   height: 100%;
 }
 

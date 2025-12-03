@@ -1,23 +1,27 @@
 <script setup>
-import { RouterLink } from 'vue-router';
-import useLoginViewModel from '../viewmodel/LoginViewModel';
+import { RouterLink } from "vue-router";
+import useLoginViewModel from "../viewmodel/LoginViewModel";
 
-const { email, password, handleLogin } = useLoginViewModel();
+const { email, password, handleLogin, errorMessage, isShaking } =
+  useLoginViewModel();
 </script>
 
 <template>
-  <div class="login-container">
+  <div class="login-container" :class="{ 'shake-animation': isShaking }">
     <div id="title">Entrar</div>
     <div class="email-field">
       <label for="email">Email</label>
-      <input type="email" id="email" v-model="email" placeholder=" "/>
+      <input type="email" id="email" v-model="email" placeholder=" " />
     </div>
     <div class="password-field">
       <label for="password">Senha</label>
-      <input type="password" id="password" v-model="password" placeholder="">
+      <input type="password" id="password" v-model="password" placeholder="" />
       <RouterLink to="/recover">
         <a id="forgot-password" href="/">Esqueci a senha</a>
       </RouterLink>
+    </div>
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
     </div>
     <div class="button-login">
       <button id="button-login2" @click="handleLogin">ENTRAR</button>
@@ -34,11 +38,11 @@ body {
   margin: 0 !important;
 }
 .login-container {
-  width: calc(100% - 60px); 
-  max-width: 600px; 
-  height: calc(100% - 282px); 
-  max-height: 550px; 
-  margin: auto; 
+  width: calc(100% - 60px);
+  max-width: 600px;
+  height: calc(100% - 282px);
+  max-height: 550px;
+  margin: auto;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: white;
@@ -54,29 +58,30 @@ body {
   margin-bottom: 1em;
   margin-top: 1.8em;
   margin-left: 0.5em;
-  font-family: 'crete round', serif;
+  font-family: "crete round", serif;
 }
 
-.email-field, .password-field {
+.email-field,
+.password-field {
   width: 100%;
-  max-width: 500px; 
+  max-width: 500px;
   margin-bottom: 1em;
   margin-left: 0.5em;
-  font-family: 'crete round', serif;
+  font-family: "crete round", serif;
   font-size: 1rem;
 }
 
-.email-field label, .password-field label {
+.email-field label,
+.password-field label {
   display: block;
   margin-bottom: 0.1em;
   margin-top: 0.4em;
   margin-left: 0.5em;
   font-size: 1.1em;
-  
-
 }
 
-input[type="email"], input[type="password"] {
+input[type="email"],
+input[type="password"] {
   width: 100%;
   padding: 1em;
   border-radius: 8px;
@@ -94,7 +99,7 @@ input[type="email"], input[type="password"] {
   width: 95%;
   padding: 0.5em;
   border: none;
-  background-color: #F26530;
+  background-color: #f26530;
   color: white;
   font-size: 1.2em;
   border-radius: 5px;
@@ -105,11 +110,11 @@ input[type="email"], input[type="password"] {
   margin-top: 1.2em;
   text-align: center;
   font-size: 1em;
-  font-family: 'inter', sans-serif;
+  font-family: "inter", sans-serif;
 }
 
 .signup_link {
-  color: #1570EF;
+  color: #1570ef;
 }
 
 .password-field {
@@ -118,67 +123,122 @@ input[type="email"], input[type="password"] {
 }
 
 #forgot-password {
-  color: #1570EF;
+  color: #1570ef;
   text-decoration: none;
   margin-top: 2rem;
   margin-left: 0.5em;
-  font-family: 'inter', sans-serif;
+  font-family: "inter", sans-serif;
+}
+
+.error-message {
+  color: #d9534f;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 600px) {
   .login-container {
-    width: calc(100% - 20px); 
-    height: calc(100% - 120px); 
-    padding: 10px; 
-  }
-  
-  #title {
-    font-size: 1.5em; 
+    width: calc(100% - 20px);
+    height: calc(100% - 120px);
+    padding: 10px;
   }
 
-  input[type="email"], input[type="password"] {
-    padding: 0.4em; 
+  #title {
+    font-size: 1.5em;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.4em;
   }
 
   #button-login2 {
-    font-size: 1em; 
+    font-size: 1em;
   }
 
   .signup_text {
-    font-size: 0.9em; 
+    font-size: 0.9em;
   }
 
   #forgot-password {
-    font-size: 0.9em; 
+    font-size: 0.9em;
+  }
+
+  .error-message {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
   }
 }
 
 @media (min-width: 601px) and (max-width: 1024px) {
   .login-container {
-    width: calc(100% - 40px); 
-    height: calc(100% - 200px); 
-    padding: 15px; 
-  }
-  
-  #title {
-    font-size: 1.8em; 
+    width: calc(100% - 40px);
+    height: calc(100% - 200px);
+    padding: 15px;
   }
 
-  input[type="email"], input[type="password"] {
-    padding: 0.45em; 
+  #title {
+    font-size: 1.8em;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.45em;
   }
 
   #button-login2 {
-    font-size: 1.1em; 
+    font-size: 1.1em;
   }
 
   .signup_text {
-    font-size: 1em; 
+    font-size: 1em;
   }
 
   #forgot-password {
-    font-size: 1em; 
+    font-size: 1em;
+  }
+  .error-message {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+}
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 
+.shake-animation {
+  animation: shake 0.3s ease-in-out;
+  border: 1px solid red;
+}
 </style>

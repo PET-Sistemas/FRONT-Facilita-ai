@@ -34,7 +34,11 @@
             <label for="category">Categoria:</label>
             <select id="category" v-model="selectedCategory" required>
               <option value="" disabled>Selecione uma categoria</option>
-              <option v-for="category in categories" :key="category.id" :value="category.titulo">
+              <option
+                v-for="category in categories"
+                :key="category.id"
+                :value="category.titulo"
+              >
                 {{ category.titulo }}
               </option>
             </select>
@@ -61,8 +65,8 @@
 
 <script>
 import HeaderPage from "@/components/header/HeaderPage.vue";
-import CadastroServicoViewModel from '../viewmodel/CadastroServicoViewModel';
-import CadastroServicoModel from '../model/CadastroServicoModel';
+import CadastroServicoViewModel from "../viewmodel/CadastroServicoViewModel";
+import CadastroServicoModel from "../model/CadastroServicoModel";
 
 export default {
   name: "CadastroServicoTela",
@@ -74,52 +78,61 @@ export default {
     return {
       ...CadastroServicoViewModel.data(),
       moneyConfig: {
-        decimal: ',',
-        thousands: '.',
-        prefix: 'R$ ',
+        decimal: ",",
+        thousands: ".",
+        prefix: "R$ ",
         precision: 2,
-        masked: false
-      }
+        masked: false,
+      },
     };
   },
   methods: {
     async handleFormSubmit() {
-
-      if (!this.titulo || !this.descricao || !this.valor || !this.selectedCategory) {
+      if (
+        !this.titulo ||
+        !this.descricao ||
+        !this.valor ||
+        !this.selectedCategory
+      ) {
         alert("Por favor, preencha todos os campos.");
         return;
       }
 
-      
-      const valorNumerico = typeof this.valor === 'string' 
-        ? parseFloat(this.valor.replace('R$ ', '').replace(/\./g, '').replace(',', '.'))
-        : this.valor;
+      const token = localStorage.getItem("jwt_token");
+      if (!token) {
+        this.$router.push("/login");
+        return;
+      }
+
+      const valorNumerico =
+        typeof this.valor === "string"
+          ? parseFloat(
+              this.valor.replace("R$ ", "").replace(/\./g, "").replace(",", ".")
+            )
+          : this.valor;
 
       const serviceData = {
         titulo: this.titulo,
         descricao: this.descricao,
         valor: valorNumerico,
-        categoriaNome: this.selectedCategory, // Corrigido de categoriaId para categoriaNome
-        // TODO: Substituir o '1' pelo ID do usuário autenticado quando o login estiver implementado
-        // Ex: const usuarioId = this.$store.state.user.id;
-        usuarioPrestadorId: 1 
+        categoriaNome: this.selectedCategory,
       };
 
       try {
         await this.submitService(serviceData);
         alert("Serviço cadastrado com sucesso!");
-        this.$router.push('/inicial_tela'); 
+        this.$router.push("/");
       } catch (error) {
         alert("Falha ao cadastrar o serviço. Tente novamente.");
       }
     },
     async loadCategories() {
       this.categories = await this.fetchCategories();
-    }
+    },
   },
   created() {
     this.loadCategories();
-  }
+  },
 };
 </script>
 
@@ -193,7 +206,7 @@ select {
   margin: 1.5em auto 0;
   padding: 0.7em;
   border: none;
-  background-color: #F26530;
+  background-color: #f26530;
   color: white;
   font-size: 1.2em;
   border-radius: 5px;

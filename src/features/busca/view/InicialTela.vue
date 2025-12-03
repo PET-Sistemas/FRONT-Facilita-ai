@@ -1,5 +1,5 @@
 <template>
-    <HeaderPage @search="updateSearchTerm" />
+  <HeaderPage @search="updateSearchTerm" />
   <div class="main-container">
     <nav class="sidebar">
       <div class="filter-section">
@@ -28,7 +28,7 @@
             type="range"
             v-model="price"
             min="0"
-            max="2000" 
+            max="2000"
             step="10"
             @input="updateSlider($event, 'price')"
             :style="getSliderBackground(price, 2000)"
@@ -38,7 +38,13 @@
     </nav>
     <div class="main-content">
       <div class="filter-rating">
-        <button class="register-button" @click="navigateToService">Cadastrar Serviço</button>
+        <button
+          v-if="isLoggedIn"
+          class="register-button"
+          @click="navigateToService"
+        >
+          Cadastrar Serviço
+        </button>
       </div>
       <section class="service-cards">
         <!-- O v-for agora está na div do card, e o router-link foi removido daqui -->
@@ -62,42 +68,58 @@
 </template>
 
 <script>
-import InicialViewModel from '@/features/busca/viewmodel/InicialViewModel';
-import InicialModel from '@/features/busca/model/InicialModel';
-import HeaderPage from '@/components/header/HeaderPage.vue';
+import InicialViewModel from "@/features/busca/viewmodel/InicialViewModel";
+import InicialModel from "@/features/busca/model/InicialModel";
+import HeaderPage from "@/components/header/HeaderPage.vue";
 
 export default {
   mixins: [InicialViewModel, InicialModel],
   components: {
-    HeaderPage
+    HeaderPage,
   },
-  
+  data() {
+    return {
+      isLoggedIn: false,
+    };
+  },
+
   computed: {
     filteredServices() {
       let services = this.filterServices(this.price, this.searchTerm);
 
       if (this.selectedCategory) {
-        services = services.filter(service => service.categoriaNome === this.selectedCategory);
+        services = services.filter(
+          (service) => service.categoriaNome === this.selectedCategory
+        );
       }
 
-      if (this.priceOrder === 'asc') {
+      if (this.priceOrder === "asc") {
         services.sort((a, b) => parseFloat(a.valor) - parseFloat(b.valor));
       } else {
         services.sort((a, b) => parseFloat(b.valor) - parseFloat(a.valor));
       }
-      
+
       return services;
     },
   },
   mounted() {
-    if (typeof this.fetchServices === 'function') {
+    this.checkLoginStatus();
+    window.addEventListener("storage-update", this.checkLoginStatus);
+    if (typeof this.fetchServices === "function") {
       this.fetchServices();
     }
-    if (typeof this.fetchCategories === 'function') {
+    if (typeof this.fetchCategories === "function") {
       this.fetchCategories();
     }
   },
+  unmounted() {
+    window.removeEventListener("storage-update", this.checkLoginStatus);
+  },
   methods: {
+    checkLoginStatus() {
+      const token = localStorage.getItem("jwt_token");
+      this.isLoggedIn = !!token;
+    },
     updateSearchTerm(term) {
       this.searchTerm = term;
     },
@@ -120,8 +142,8 @@ header {
   height: 7rem;
   background: linear-gradient(
     to left,
-    #024A59 0%,
-    #024A59 35%,
+    #024a59 0%,
+    #024a59 35%,
     #067057 100%,
     #068852 100%
   );
@@ -129,15 +151,15 @@ header {
 
 .main-container {
   display: flex;
-  height: 100vh; 
-  overflow: hidden; 
+  height: 100vh;
+  overflow: hidden;
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
-  overflow-y: auto; 
-  margin-bottom: 10rem; 
+  overflow-y: auto;
+  margin-bottom: 10rem;
 }
 
 .search-container {
@@ -216,18 +238,18 @@ svg {
 
 .sidebar {
   width: 250px;
-  height: 100vh; 
+  height: 100vh;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .filter-section {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  font-family: 'inter', sans-serif;
+  font-family: "inter", sans-serif;
   font-size: 15px;
 }
 
@@ -264,7 +286,7 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 15px;
   height: 15px;
-  background: #024A59;
+  background: #024a59;
   border-radius: 50%;
   cursor: pointer;
   position: relative;
@@ -281,7 +303,7 @@ input[type="range"]::-moz-range-track {
 input[type="range"]::-moz-range-thumb {
   width: 15px;
   height: 15px;
-  background: #024A59;
+  background: #024a59;
   border-radius: 50%;
   cursor: pointer;
   position: relative;
@@ -297,7 +319,7 @@ input[type="range"]::-ms-track {
 }
 
 input[type="range"]::-ms-fill-lower {
-  background: #024A59;
+  background: #024a59;
   border-radius: 5px;
 }
 
@@ -309,8 +331,8 @@ input[type="range"]::-ms-fill-upper {
 input[type="range"]::-webkit-slider-runnable-track {
   background: linear-gradient(
     to right,
-    #024A59 0%,
-    #024A59 var(--value, 0%),
+    #024a59 0%,
+    #024a59 var(--value, 0%),
     #ccc var(--value, 0%),
     #ccc 100%
   );
@@ -319,8 +341,8 @@ input[type="range"]::-webkit-slider-runnable-track {
 input[type="range"]::-moz-range-track {
   background: linear-gradient(
     to right,
-    #024A59 0%,
-    #024A59 var(--value, 0%),
+    #024a59 0%,
+    #024a59 var(--value, 0%),
     #ccc var(--value, 0%),
     #ccc 100%
   );
@@ -328,9 +350,9 @@ input[type="range"]::-moz-range-track {
 
 .service-cards {
   padding: 20px;
-  border-radius: 15px; 
-  border: 1px solid #e0e0e0; 
-  background-color: #f9f9f9; 
+  border-radius: 15px;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -347,15 +369,16 @@ input[type="range"]::-moz-range-track {
   align-items: flex-start;
 }
 
-.card h3, .card p {
+.card h3,
+.card p {
   margin: 5px 0;
-  font-family: 'Inter';
+  font-family: "Inter";
 }
 
 .card p:nth-child(2) {
-  color: #5C5B5B;
-  font-family: 'Crete Round', serif;
-  font-size: 18px; 
+  color: #5c5b5b;
+  font-family: "Crete Round", serif;
+  font-size: 18px;
 }
 
 .service-image {
@@ -394,12 +417,12 @@ input[type="range"]::-moz-range-track {
 }
 
 .star.filled {
-  color: #FFD700;
+  color: #ffd700;
 }
 
 .contratar-button {
   padding: 10px 20px;
-  background-color: #024A59;
+  background-color: #024a59;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -413,7 +436,7 @@ input[type="range"]::-moz-range-track {
 
 .solicitado-button {
   padding: 10px 20px;
-  background-color: #F26530;
+  background-color: #f26530;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -422,7 +445,7 @@ input[type="range"]::-moz-range-track {
 }
 
 solicitado-button:hover {
-  background-color: #D9542B;
+  background-color: #d9542b;
 }
 
 .filter-rating {
@@ -435,7 +458,7 @@ solicitado-button:hover {
 .dropdown-button {
   padding: 10px 20px;
   background: none;
-  color: #024A59;
+  color: #024a59;
   border: none;
   cursor: pointer;
   display: flex;
@@ -448,13 +471,13 @@ solicitado-button:hover {
 
 .dropdown-button .arrow-up::after,
 .dropdown-button .arrow-down::after {
-  content: '';
+  content: "";
   display: inline-block;
   margin-left: 10px;
-  border: solid #024A59;
+  border: solid #024a59;
   border-width: 0 2px 2px 0;
   padding: 3px;
-  align-self: center; 
+  align-self: center;
 }
 
 .dropdown-button:hover .arrow-up::after,
@@ -475,7 +498,7 @@ solicitado-button:hover {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0; 
+  right: 0;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -503,15 +526,15 @@ solicitado-button:hover {
   height: 3.5rem;
   width: 12.5rem;
   border-radius: 10px;
-  border: 0.1rem solid #C0C0C0;
+  border: 0.1rem solid #c0c0c0;
   box-sizing: border-box;
-  background-color: #FFF;
+  background-color: #fff;
   font-size: 0.9em;
 }
 
 .register-button {
   padding: 10px 20px;
-  background-color: #F26530;
+  background-color: #f26530;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -520,9 +543,8 @@ solicitado-button:hover {
 }
 
 .register-button:hover {
-  background-color: #D9542B;
+  background-color: #d9542b;
 }
-
 
 .price {
   font-weight: bold;

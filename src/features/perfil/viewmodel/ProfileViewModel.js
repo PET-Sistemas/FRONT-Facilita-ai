@@ -15,10 +15,6 @@ export default class ProfileViewModel {
     this.apiClient = apiClient;
   }
 
-  /**
-   * Busca os dados do usuário e retorna o modelo reativo.
-   * @returns {Promise<object|null>} user
-   */
   async fetchUserData() {
     try {
       const response = await this.apiClient.get("/usuario/me");
@@ -26,6 +22,21 @@ export default class ProfileViewModel {
       return this.profileModel.user;
     } catch (error) {
       console.error("Erro ao buscar dados do usuário:", error);
+      return null;
+    }
+  }
+
+  async fetchFoto() {
+    try {
+      const perfil = await this.apiClient.get("/files/view/profile", {
+        responseType: "blob", // <--- ESSENCIAL
+      });
+
+      const url = URL.createObjectURL(perfil.data);
+      console.log(url);
+      return url;
+    } catch (error) {
+      console.error("Erro ao buscar foto do usuário:", error);
       return null;
     }
   }
@@ -92,13 +103,77 @@ export default class ProfileViewModel {
     }
   }
 
-  uploadProfilePicture(file) {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.updateUserData({ profilePicture: e.target.result });
-      };
-      reader.readAsDataURL(file);
+  /**
+   * Faz preview local da imagem E efetua upload para o backend.
+   * @param {File} file
+   * @param {Object} options opcional: { useAuthUser: boolean, userId: number }
+   *
+   * useAuthUser=true => POST /files/upload/profile (recomendado)
+   * useAuthUser=false => POST /files/upload?userId=xxx
+   */
+  async uploadProfilePicture(
+    file,
+    options = { useAuthUser: true, userId: null }
+  ) {
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.updateUserData({ profilePicture: e.target.result });
+    };
+    reader.readAsDataURL(file);
+
+    const fd = new FormData();
+    fd.append("file", file);
+
+    let url;
+    let config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    try {
+      if (options.useAuthUser) {
+        url = "/files/upload/profile";
+        const resp = await this.apiClient.post(url, fd, config);
+        if (resp && resp.data && resp.data.url) {
+          this.updateUserData({ profilePicture: resp.data.url });
+          // atualiza também o objeto persistido no ProfileModel
+          if (this.profileModel) {
+            this.profileModel.user.profilePicture = resp.data.url;
+            this.profileModel.saveChanges();
+          }
+        }
+      } else {
+        if (
+          !options.userId &&
+          this.profileModel &&
+          this.profileModel.user &&
+          this.profileModel.user.id
+        ) {
+          options.userId = this.profileModel.user.id;
+        }
+        if (!options.userId)
+          throw new Error("userId necessário quando useAuthUser=false");
+
+        url = `/files/upload?userId=${options.userId}`;
+        const resp = await this.apiClient.post(url, fd, config);
+        if (resp && resp.data && resp.data.url) {
+          this.updateUserData({ profilePicture: resp.data.url });
+          if (this.profileModel) {
+            this.profileModel.user.profilePicture = resp.data.url;
+            this.profileModel.saveChanges();
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Erro no upload da imagem:", err);
+      alert("Falha ao enviar imagem. Tente novamente.");
+      // opcional: reverter preview para imagem antiga
+      if (this.profileModel) {
+        this.profileModel.revertChanges();
+      }
     }
   }
 }
