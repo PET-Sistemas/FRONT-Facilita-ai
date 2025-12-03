@@ -1,10 +1,11 @@
 export default class ProfileModel {
   constructor(data) {
-    // mantém todos os dados vindos do backend
-    this.user = { ...data };
+    this.user = {
+      ...data,
+      profilePicture: data.fotoPerfil || data.profilePicture || null,
+    };
 
-    // salva backup pra poder reverter
-    this.originalUser = structuredClone(data);
+    this.originalUser = structuredClone(this.user);
   }
 
   updateUserData(newData) {

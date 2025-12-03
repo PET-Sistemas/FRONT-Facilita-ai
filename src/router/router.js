@@ -1,5 +1,5 @@
 // src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 
 // Importar seus componentes dinamicamente
 const HomePage = () => import('../features/login/view/HomePage.vue');
@@ -12,42 +12,43 @@ const AvaliacoesTela = () => import('../features/listaAvaliacoes/view/Avaliacoes
 const AvaliarServicoTela = () => import('../features/avaliarServico/view/AvaliarServicoTela.vue');
 
 // Obter a URL base a partir da variável de ambiente
-const baseUrl = process.env.VUE_APP_BASE_URL || '/';
-
+const baseUrl = process.env.VUE_APP_BASE_URL || "/";
 
 const router = createRouter({
   history: createWebHistory(baseUrl),
   routes: [
     {
-      path: '/inicial_tela',
-      name: 'inicial_tela',
-      component: InicialTela,
-    },
-    {
-      path: '/',
-      name: 'home',
+      path: "/",
+      name: "home",
       component: HomePage,
     },
     {
-      path: '/sign_up',
-      name: 'sign_up',
+      path: "/login",
+      name: "login",
+      component: LoginPage,
+    },
+    {
+      path: "/sign_up",
+      name: "sign_up",
       component: CadastroPage,
     },
     {
-      path: '/profile',
-      name: 'profile',
+      path: "/profile",
+      name: "profile",
       component: ProfilePage,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/servico/cadastrar',
-      name: 'cadastroServico',
+      path: "/servico/cadastrar",
+      name: "cadastroServico",
       component: CadastroServicoTela,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/servico/:id',
-      name: 'servicoDetalhe',
+      path: "/servico/:id",
+      name: "servicoDetalhe",
       component: ServicoDetalheTela,
-      props: true
+      props: true,
     },
     {
       path: '/servico/:id/avaliacoes',
@@ -63,5 +64,17 @@ const router = createRouter({
     },
   ],
 });
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem("jwt_token");
 
+    if (token) {
+      next();
+    } else {
+      next("/login");
+    }
+  } else {
+    next();
+  }
+});
 export default router;

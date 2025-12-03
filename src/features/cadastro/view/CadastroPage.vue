@@ -1,215 +1,288 @@
 <template>
-    <div class="blue-side">
-      <div class="container">
-        <div class="full-forms">
-          <div id="title">Cadastrar</div>
+  <div class="blue-side">
+    <div class="container">
+      <div class="full-forms">
+        <div id="title">Cadastrar</div>
+
+        <div class="nome-foto">
           <div class="name-field">
             <label for="name">Nome completo</label>
-            <input type="text" id="name" placeholder="" v-model="viewModel.nomeCompleto" />
+            <input
+              type="text"
+              id="name"
+              placeholder=""
+              v-model="viewModel.nomeCompleto"
+            />
           </div>
-  
-          <div class="double-field">
-            <div class="data-field">
-              <label for="datanascimento">Data de nascimento</label>
-              <input type="date" name="datanascimento" class="data" id="datanascimento" required v-model="viewModel.dataNascimento" placeholder="DD/MM/AAAA">
-            </div>
-        
-            <div class="phone-field">
-              <label for="phone">Telefone</label>
-              <input type="tel" id="phone" class="phone-input" placeholder="(XX) XXXXX-XXXX" v-model="viewModel.telefone" />
-            </div>
+
+          <div class="file-field">
+            <label for="fotoPerfil">Foto de perfil </label>
+            <input
+              type="file"
+              id="fotoPerfil"
+              accept="image/*"
+              @change="viewModel.handleFileUpload"
+            />
+          </div>
         </div>
 
-         <div class="address-field">
-            <label for="address">Endereço</label>
-            <input type="text" id="address" placeholder="" v-model="viewModel.endereco" />
-          </div>
-  
-          <div class="double-field">
-            <div class="state-field">
-              <label for="state">Estado</label>
-              <select id="state" class="state" v-model="viewModel.selectedState" @change="viewModel.fetchCities">
-                <option value="">UF</option>
-                <option v-for="state in viewModel.states" :key="state.sigla" :value="state.sigla">
-                  {{ state.nome }}
-                </option>
-              </select>
-            </div>
-            <div class="city-field">
-              <label for="city">Cidade</label>
-              <select id="city" class="city" v-model="viewModel.selectedCity">
-                <option value="">Cidade</option>
-                <option v-for="city in viewModel.cities" :key="city.nome" :value="city.nome">
-                  {{ city.nome }}
-                </option>
-              </select>
-            </div>
-          </div>
-  
-          <div class="email-field">
-            <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="" v-model="viewModel.email" />
-          </div>
-  
-          <div class="double-field">
-            <div class="password-field">
-              <label for="password">Senha</label>
-              <input type="password" id="password" placeholder="" v-model="viewModel.senha" />
-            </div>
-            <div class="confirmation">
-              <label for="confirmation">Confirmar senha</label>
-              <input type="password" id="confirmation" placeholder="" v-model="viewModel.confirmation" />
-            </div>
+        <div class="double-field">
+          <div class="data-field">
+            <label for="datanascimento">Data de nascimento</label>
+            <input
+              type="date"
+              name="datanascimento"
+              class="data"
+              id="datanascimento"
+              required
+              v-model="viewModel.dataNascimento"
+              placeholder="DD/MM/AAAA"
+            />
           </div>
 
-          <div class="button-sign">
-            <router-link to="/">
-              <button id="button-sign2" @click="viewModel.submitForm">CADASTRAR</button>
-            </router-link>
+          <div class="phone-field">
+            <label for="phone">Telefone</label>
+            <input
+              type="tel"
+              id="phone"
+              class="phone-input"
+              placeholder="(XX) XXXXX-XXXX"
+              v-model="viewModel.telefone"
+            />
           </div>
-  
-          <div class="login_text">
-            Já possui uma conta?
-            <router-link to="/" class="login_link">Entrar</router-link>
+        </div>
+
+        <div class="address-field">
+          <label for="address">Endereço</label>
+          <input
+            type="text"
+            id="address"
+            placeholder=""
+            v-model="viewModel.endereco"
+          />
+        </div>
+
+        <div class="double-field">
+          <div class="state-field">
+            <label for="state">Estado</label>
+            <select
+              id="state"
+              class="state"
+              v-model="viewModel.selectedState"
+              @change="viewModel.fetchCities"
+            >
+              <option value="">UF</option>
+              <option
+                v-for="state in viewModel.states"
+                :key="state.sigla"
+                :value="state.sigla"
+              >
+                {{ state.nome }}
+              </option>
+            </select>
           </div>
+          <div class="city-field">
+            <label for="city">Cidade</label>
+            <select id="city" class="city" v-model="viewModel.selectedCity">
+              <option value="">Cidade</option>
+              <option
+                v-for="city in viewModel.cities"
+                :key="city.nome"
+                :value="city.nome"
+              >
+                {{ city.nome }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="email-field">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            placeholder=""
+            v-model="viewModel.email"
+          />
+        </div>
+
+        <div class="double-field">
+          <div class="password-field">
+            <label for="password">Senha</label>
+            <input
+              type="password"
+              id="password"
+              placeholder=""
+              v-model="viewModel.senha"
+            />
+          </div>
+          <div class="confirmation">
+            <label for="confirmation">Confirmar senha</label>
+            <input
+              type="password"
+              id="confirmation"
+              placeholder=""
+              v-model="viewModel.confirmation"
+            />
+          </div>
+        </div>
+
+        <div class="button-sign">
+          <button id="button-sign2" @click="handleRegister">CADASTRAR</button>
+        </div>
+
+        <div class="login_text">
+          Já possui uma conta?
+          <router-link to="/login" class="login_link">Entrar</router-link>
         </div>
       </div>
     </div>
-  </template>
-  
+  </div>
+</template>
+
 <script>
-import CadastroViewModel from '../viewmodel/CadastroViewModel';
+import CadastroViewModel from "../viewmodel/CadastroViewModel";
 
 export default {
-    data() {
-        return {
-            viewModel: new CadastroViewModel()
-        };
+  data() {
+    return {
+      viewModel: new CadastroViewModel(),
+    };
+  },
+  mounted() {
+    this.viewModel.fetchStates();
+  },
+  methods: {
+    async handleRegister() {
+      try {
+        await this.viewModel.submitForm();
+        alert("Cadastro realizado com sucesso!");
+        this.$router.push("/login");
+      } catch (error) {
+        console.error(error);
+      }
     },
-    mounted() {
-        this.viewModel.fetchStates(); 
-    }
+  },
 };
 </script>
 
 <style scoped>
-
 input::placeholder {
   color: #999;
 }
 
 .container {
-    margin-top: 50px;
-    margin-bottom: 10px;
-    margin-right: 15%;
-    margin-left: 15%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  margin-top: 50px;
+  margin-bottom: 10px;
+  margin-right: 15%;
+  margin-left: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .blue-side {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100vh;
-    background: linear-gradient(
-        to left bottom,
-        #024A59 0%,
-        #024A59 0%,
-        #024A59 0%,
-        #024A59 0%,
-        #024A59 0%,
-        #024A59 35%,
-        #024A59 49%,
-        #024A59 54%,
-        #067057 86%,
-        #068852 100%,
-        #348a09 100%,
-        #9e940c 100%,
-        #F2E206 100%
-    );
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  background: linear-gradient(
+    to left bottom,
+    #024a59 0%,
+    #024a59 0%,
+    #024a59 0%,
+    #024a59 0%,
+    #024a59 0%,
+    #024a59 35%,
+    #024a59 49%,
+    #024a59 54%,
+    #067057 86%,
+    #068852 100%,
+    #348a09 100%,
+    #9e940c 100%,
+    #f2e206 100%
+  );
 }
 
-.full-forms{
-    overflow-y: scroll;
-    width: 90%;
-    height: 90vh;
-    border-radius: 20px;
-    box-shadow: 10px 10px 25px 0px rgba(0, 0, 0, 0.5);
-    font-family: 'Crete Round';
-    background-color: white;
+.full-forms {
+  overflow-y: scroll;
+  width: 90%;
+  height: 90vh;
+  border-radius: 20px;
+  box-shadow: 10px 10px 25px 0px rgba(0, 0, 0, 0.5);
+  font-family: "Crete Round";
+  background-color: white;
 }
 
-#title{
-    margin-left: 3.5rem;
-    margin-top: 2.5rem;
-    margin-right:2.5rem;
-    margin-bottom: 1rem;
-    font-size: 2.3em;
-    font-weight: bold;
+#title {
+  margin-left: 3.5rem;
+  margin-top: 2.5rem;
+  margin-right: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 2.3em;
+  font-weight: bold;
 }
 
-.email-field{
-    margin-top: 1.3rem;
-    margin-left: 3.5rem;
-    margin-right: 5.5rem;
-    color: #3E3E3E;
-    font-size: 1.2em;   
+.email-field {
+  margin-top: 1.3rem;
+  margin-left: 3.5rem;
+  margin-right: 5.5rem;
+  color: #3e3e3e;
+  font-size: 1.2em;
 }
 
-.double-field{
-    width: 100% !important;
-    display: flex !important;
+.double-field {
+  width: 100% !important;
+  display: flex !important;
 }
 
-.data-field{
-    margin-top: 1.3rem !important; 
-    margin-left: 3.5rem !important;
-    margin-right: 5.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;  
+.data-field {
+  margin-top: 1.3rem !important;
+  margin-left: 3.5rem !important;
+  margin-right: 5.5rem !important;
+  color: #3e3e3e !important;
+  font-size: 1.3em !important;
 }
 
-.state-field{
-    margin-top: 1.3rem !important; 
-    margin-left: 3.5rem ;
-    margin-right: 5.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;   
+.state-field {
+  margin-top: 1.3rem !important;
+  margin-left: 3.5rem;
+  margin-right: 5.5rem !important;
+  color: #3e3e3e !important;
+  font-size: 1.3em !important;
 }
 
-.phone-field{
-    display: flex !important;
-    flex-direction: column !important;
-    margin-top: 1.3rem !important; 
-    margin-left: 3.5rem !important;
-    margin-right: 5.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;   
+.phone-field {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-top: 1.3rem !important;
+  margin-left: 3.5rem !important;
+  margin-right: 5.5rem !important;
+  color: #3e3e3e !important;
+  font-size: 1.3em !important;
 }
 
-.city-field{
-    margin-top: 1.3rem !important; 
-    margin-left: 3.5rem !important;
-    margin-right: 5.5rem !important;
-    color: #3E3E3E !important;
-    font-size: 1.3em !important;    
+.city-field {
+  margin-top: 1.3rem !important;
+  margin-left: 3.5rem !important;
+  margin-right: 5.5rem !important;
+  color: #3e3e3e !important;
+  font-size: 1.3em !important;
 }
 
-.phone{
-    display: block !important;
-    margin-top: 0.5rem !important;
-    padding: 0.25rem !important;
-    height: 3.5rem !important;
-    width: 12.5rem !important;
-    border-radius: 10px !important;
-    border: 0.1rem solid #C0C0C0 !important;
-    box-sizing: border-box !important;
-    background-color: #FFF !important;
-    font-size: 0.9em !important;
+.phone {
+  display: block !important;
+  margin-top: 0.5rem !important;
+  padding: 0.25rem !important;
+  height: 3.5rem !important;
+  width: 12.5rem !important;
+  border-radius: 10px !important;
+  border: 0.1rem solid #c0c0c0 !important;
+  box-sizing: border-box !important;
+  background-color: #fff !important;
+  font-size: 0.9em !important;
 }
 
 .phone-input {
@@ -217,303 +290,338 @@ input::placeholder {
   padding: 0.25rem !important;
   height: 3.5rem !important;
   border-radius: 10px !important;
-  border: 0.1rem solid #C0C0C0 !important;
+  border: 0.1rem solid #c0c0c0 !important;
   box-sizing: border-box !important;
-  background-color: #FFF !important;
+  background-color: #fff !important;
   font-size: 0.9em !important;
 }
 .phone-input::placeholder {
-    color: #888;
+  color: #888;
 }
 
-.address-field{
-    margin-top: 1.3rem !important;
-    margin-left: 3.5rem;
-    margin-right: 5.5rem;
-    color: #3E3E3E;
-    font-size: 1.3em;   
+.address-field {
+  margin-top: 1.3rem !important;
+  margin-left: 3.5rem;
+  margin-right: 5.5rem;
+  color: #3e3e3e;
+  font-size: 1.3em;
 }
 
-#address{
-    display: block;
-    margin-top: 0.5rem;
-    padding: 0.25rem;
-    height: 3.5rem;
-    width: 100%;
-    border-radius: 10px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF ;
-    font-size: 0.9em;
+#address {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  height: 3.5rem;
+  width: 100%;
+  border-radius: 10px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 0.9em;
 }
 
-.state{
-    display: block !important;
-    margin-top: 0.5rem !important;
-    padding: 0.25rem !important;
-    height: 3.5rem !important;
-    width: 12.5rem !important;
-    border-radius: 10px !important;
-    border: 0.1rem solid #C0C0C0 !important;
-    box-sizing: border-box !important;
-    background-color: #FFF !important;
-    font-size: 0.9em !important;
+.state {
+  display: block !important;
+  margin-top: 0.5rem !important;
+  padding: 0.25rem !important;
+  height: 3.5rem !important;
+  width: 12.5rem !important;
+  border-radius: 10px !important;
+  border: 0.1rem solid #c0c0c0 !important;
+  box-sizing: border-box !important;
+  background-color: #fff !important;
+  font-size: 0.9em !important;
 }
 
-.city{
-    display: block !important;
-    margin-top: 0.5rem !important;
-    padding: 0.25rem !important;
-    height: 3.5rem !important;
-    width: 12.5rem !important;
-    border-radius: 10px !important;
-    border: 0.1rem solid #C0C0C0 !important;
-    box-sizing: border-box !important;
-    background-color: #FFF !important;
-    font-size: 0.9em !important;
+.city {
+  display: block !important;
+  margin-top: 0.5rem !important;
+  padding: 0.25rem !important;
+  height: 3.5rem !important;
+  width: 12.5rem !important;
+  border-radius: 10px !important;
+  border: 0.1rem solid #c0c0c0 !important;
+  box-sizing: border-box !important;
+  background-color: #fff !important;
+  font-size: 0.9em !important;
 }
 
-.data{
-    display: block;
-    margin-top: 0.5rem !important;
-    padding: 0.25rem !important;
-    height: 3.5rem !important;
-    width: 12.5rem !important;
-    border-radius: 10px !important;
-    border: 0.1rem solid #C0C0C0 !important;
-    box-sizing: border-box !important;
-    background-color: #FFF !important;
-    font-size: 0.9em !important;
+.data {
+  display: block;
+  margin-top: 0.5rem !important;
+  padding: 0.25rem !important;
+  height: 3.5rem !important;
+  width: 12.5rem !important;
+  border-radius: 10px !important;
+  border: 0.1rem solid #c0c0c0 !important;
+  box-sizing: border-box !important;
+  background-color: #fff !important;
+  font-size: 0.9em !important;
 }
 
-#email{
-    display: block;
-    margin-top: 0.5rem;
-    padding: 0.25rem;
-    height: 3.5rem;
-    width: 100%;
-    border-radius: 10px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF ;
-    font-size: 0.9em;
+#email {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  height: 3.5rem;
+  width: 100%;
+  border-radius: 10px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 0.9em;
 }
 
-.name-field{
-    margin-top: 3.3rem;
-    margin-left: 3.5rem;
-    margin-right: 5.5rem;
-    color: #3E3E3E;
-    font-size: 1.3em;   
+.nome-foto {
+  display: flex;
+  margin-top: 3.3rem;
+  margin-left: 3.5rem;
+  justify-content: space-between;
 }
 
-#name{
-    display: block;
-    margin-top: 0.5rem;
-    padding: 0.25rem;
-    height: 3.5rem;
-    width: 100%;
-    border-radius: 10px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF ;
-    font-size: 0.9em;
+.name-field {
+  margin-right: 2rem;
+  color: #3e3e3e;
+  font-size: 1.3em;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
 }
 
-.password-field{
-    position: relative;
-    margin-top: 1.3rem;
-    margin-left: 3.5rem;
-    margin-right: 2.5%;
-    border-radius: 10px;
-    color: #3E3E3E;
-    font-size: 1.3em;
+.file-field {
+  margin-left: 2em;
+  width: 30%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  font-size: 1.3em;
+  color: #3e3e3e;
 }
 
-#password{
-    display: block;
-    margin-top: 0.3em;
-    padding: 0.25rem;
-    width: 22rem;
-    height: 3.5rem;
-    border-radius: 10px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF ;
-    font-size: 0.9em;
+::file-selector-button {
+  border: 2px solid #f26530;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #f26530;
+  color: white;
+  font-size: 1.3em;
+  margin-top: 1em;
+  font-weight: bold;
 }
 
-.confirmation{
-    position: relative;
-    margin-top: 1.3rem;
-    margin-left: 3.5rem;
-    margin-right: 7.5rem;
-    border-radius: 10px;
-    color: #3E3E3E;
-    font-size: 1.3em;
+#name {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  height: 3.5rem;
+  width: 100%;
+  border-radius: 10px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 0.9em;
 }
 
-#confirmation{
-    display: block;
-    margin-top: 0.4rem;
-    padding: 0.25rem;
-    width: 22rem;
-    height: 3.5rem;
-    border-radius: 10px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF ;
+.password-field {
+  position: relative;
+  margin-top: 1.3rem;
+  margin-left: 3.5rem;
+  margin-right: 2.5%;
+  border-radius: 10px;
+  color: #3e3e3e;
+  font-size: 1.3em;
 }
 
-a{
-    text-decoration: none;
-    color: #1570EF;
-    margin-top: 5.7rem;
-    font-family: 'Inter';
+#password {
+  display: block;
+  margin-top: 0.3em;
+  padding: 0.25rem;
+  width: 22rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 0.9em;
 }
 
-a:visited{
-    color: #1570EF;
+.confirmation {
+  position: relative;
+  margin-top: 1.3rem;
+  margin-left: 3.5rem;
+  margin-right: 7.5rem;
+  border-radius: 10px;
+  color: #3e3e3e;
+  font-size: 1.3em;
 }
 
-
-.button-sign2{
-    align-items: center;
+#confirmation {
+  display: block;
+  margin-top: 0.4rem;
+  padding: 0.25rem;
+  width: 22rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
 }
 
-#button-sign2{
-    width: 50%;
-    margin-top: 2.5em;
-    margin-left:25%;
-    padding: 0.25rem;
-    background-color: #F26530;
-    height: 3.2rem;
-    border-radius: 7px;
-    color: #FFF;
-    font-weight: bold;
-    font-size: 1.5em;
-    cursor: pointer;
-    border: none;
+a {
+  text-decoration: none;
+  color: #1570ef;
+  margin-top: 5.7rem;
+  font-family: "Inter";
 }
 
+a:visited {
+  color: #1570ef;
+}
 
-.login_text, a{
-    margin-top: 0.5rem;
-    font-family: 'Inter';
-    font-size: 1.1em;
-    color: #3E3E3E;
-    text-align: center;
-    margin-bottom: 3%;
+.button-sign2 {
+  align-items: center;
+}
+
+#button-sign2 {
+  width: 50%;
+  margin-top: 2.5em;
+  margin-left: 25%;
+  padding: 0.25rem;
+  background-color: #f26530;
+  height: 3.2rem;
+  border-radius: 7px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5em;
+  cursor: pointer;
+  border: none;
+}
+
+.login_text,
+a {
+  margin-top: 0.5rem;
+  font-family: "Inter";
+  font-size: 1.1em;
+  color: #3e3e3e;
+  text-align: center;
+  margin-bottom: 3%;
 }
 
 .select2-container--default .select2-selection--single {
-    background-color: #FFF;
-    border: 0.1rem solid #C0C0C0;
-    border-radius: 10px;
-    height: 3.5rem;
-    box-shadow: none;
-    font-size: 0.9em;
-    margin-top: 0.5rem;
-    margin-left: 3.5rem;
-    margin-right: 5.5rem;
+  background-color: #fff;
+  border: 0.1rem solid #c0c0c0;
+  border-radius: 10px;
+  height: 3.5rem;
+  box-shadow: none;
+  font-size: 0.9em;
+  margin-top: 0.5rem;
+  margin-left: 3.5rem;
+  margin-right: 5.5rem;
 }
 
 footer {
-    margin-top: 2em;
-    padding: 1em;
-    background-color: #024A59;
-    color: white;
-    font-family: 'Crete Round';
-    font-size: 0.9em;
-    text-align: center;
+  margin-top: 2em;
+  padding: 1em;
+  background-color: #024a59;
+  color: white;
+  font-family: "Crete Round";
+  font-size: 0.9em;
+  text-align: center;
 }
 
 footer a {
-    color: white;
+  color: white;
 }
 
 footer a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-#password_icon{
-    position: absolute;
-    right: 1.25rem;
-    top: 4.35rem;
-    cursor: pointer;
+#password_icon {
+  position: absolute;
+  right: 1.25rem;
+  top: 4.35rem;
+  cursor: pointer;
 }
 
-#password_icon_confirmation{
-    position: absolute;
-    right: 1.25rem;
-    top: 4.35rem;
-    cursor: pointer;
+#password_icon_confirmation {
+  position: absolute;
+  right: 1.25rem;
+  top: 4.35rem;
+  cursor: pointer;
 }
 
 #file-directory {
-    display: inline-block;
-    margin-left: 3.5rem;
-    margin-top: 1.3rem;
-    font-size: 1.2em;
-    color: #3E3E3E;
+  display: inline-block;
+  margin-left: 3.5rem;
+  margin-top: 1.3rem;
+  font-size: 1.2em;
+  color: #3e3e3e;
 }
 
 #file-button {
-    margin: auto;
-    background-color: #F26530;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  margin: auto;
+  background-color: #f26530;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #generate-button {
-    display: block;
-    margin: 2rem auto;
-    padding: 0.75rem 2rem;
-    background-color: #F26530;
-    color: white;
-    border: none;
-    border-radius: 7px;
-    font-size: 1.3em;
-    cursor: pointer;
+  display: block;
+  margin: 2rem auto;
+  padding: 0.75rem 2rem;
+  background-color: #f26530;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 1.3em;
+  cursor: pointer;
 }
 
 #digit-size {
-    display: inline-block;
-    width: 3rem;
-    margin-left: 3.5rem;
-    margin-top: 1.3rem;
-    padding: 0.25rem;
-    border-radius: 5px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF;
+  display: inline-block;
+  width: 3rem;
+  margin-left: 3.5rem;
+  margin-top: 1.3rem;
+  padding: 0.25rem;
+  border-radius: 5px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
 }
 
 #filter-options {
-    display: inline-block;
-    margin-left: 1rem;
-    margin-top: 1.3rem;
+  display: inline-block;
+  margin-left: 1rem;
+  margin-top: 1.3rem;
 }
 
 #status-message {
-    display: block;
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 1.2em;
-    color: #3E3E3E;
+  display: block;
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1.2em;
+  color: #3e3e3e;
 }
 
 #file-size-input {
-    display: inline-block;
-    margin-left: 1rem;
-    width: 3rem;
-    padding: 0.25rem;
-    border-radius: 5px;
-    border: 0.1rem solid #C0C0C0;
-    box-sizing: border-box;
-    background-color: #FFF;
+  display: inline-block;
+  margin-left: 1rem;
+  width: 3rem;
+  padding: 0.25rem;
+  border-radius: 5px;
+  border: 0.1rem solid #c0c0c0;
+  box-sizing: border-box;
+  background-color: #fff;
 }
 
+.login_link {
+  color: #f26530;
+  font-weight: bold;
+}
 </style>
