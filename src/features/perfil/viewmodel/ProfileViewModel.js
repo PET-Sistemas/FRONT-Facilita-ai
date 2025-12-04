@@ -28,16 +28,39 @@ export default class ProfileViewModel {
 
   async fetchFoto() {
     try {
-      const perfil = await this.apiClient.get("/files/view/profile", {
+      const response = await this.apiClient.get("/files/view/profile", {
         responseType: "blob", // <--- ESSENCIAL
       });
 
-      const url = URL.createObjectURL(perfil.data);
-      console.log(url);
+      const url = URL.createObjectURL(response.data);
       return url;
     } catch (error) {
-      console.error("Erro ao buscar foto do usuário:", error);
+      console.warn("Usuário sem foto de perfil ou erro ao buscar.");
       return null;
+    }
+  }
+
+  async fetchStates() {
+    try {
+      const response = await this.apiClient.get(
+        "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+      );
+      this.states = response.data;
+    } catch (error) {
+      console.error("Erro ao buscar estados:", error);
+    }
+  }
+
+  async fetchCities() {
+    try {
+      if (this.selectedState) {
+        const response = await this.apiClient.get(
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.selectedState}/municipios`
+        );
+        this.cities = response.data;
+      }
+    } catch (error) {
+      console.error("Erro ao buscar cidades:", error);
     }
   }
 
@@ -68,20 +91,31 @@ export default class ProfileViewModel {
     this.isEditing = false;
   }
 
-  async saveData() {
+  async saveData(dadosAtualizados = null) {
     try {
-      const response = await this.apiClient.put(
-        "/usuario/me",
-        this.profileModel.user
-      );
+      if (dadosAtualizados) {
+        this.updateUserData(dadosAtualizados);
+      }
+
+      const payload = { ...this.profileModel.user };
+
+      delete payload.profilePicture;
+
+      const response = await this.apiClient.put("/usuario", payload);
+
+      if (response.data) {
+        this.profileModel.user = response.data;
+      }
       this.profileModel.user = response.data;
       this.profileModel.saveChanges();
 
       this.isEditing = false;
       alert("Dados salvos com sucesso!");
+      return true;
     } catch (error) {
       console.error("Erro ao salvar os dados:", error);
       alert("Erro ao salvar os dados.");
+      return false;
     }
   }
 
@@ -103,76 +137,37 @@ export default class ProfileViewModel {
     }
   }
 
-  /**
-   * Faz preview local da imagem E efetua upload para o backend.
-   * @param {File} file
-   * @param {Object} options opcional: { useAuthUser: boolean, userId: number }
-   *
-   * useAuthUser=true => POST /files/upload/profile (recomendado)
-   * useAuthUser=false => POST /files/upload?userId=xxx
-   */
-  async uploadProfilePicture(
-    file,
-    options = { useAuthUser: true, userId: null }
-  ) {
+  async uploadProfilePicture(file) {
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.updateUserData({ profilePicture: e.target.result });
+      if (this.profileModel && this.profileModel.user) {
+        this.profileModel.user.profilePicture = e.target.result;
+      }
     };
     reader.readAsDataURL(file);
 
     const fd = new FormData();
     fd.append("file", file);
 
-    let url;
-    let config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
     try {
-      if (options.useAuthUser) {
-        url = "/files/upload/profile";
-        const resp = await this.apiClient.post(url, fd, config);
-        if (resp && resp.data && resp.data.url) {
-          this.updateUserData({ profilePicture: resp.data.url });
-          // atualiza também o objeto persistido no ProfileModel
-          if (this.profileModel) {
-            this.profileModel.user.profilePicture = resp.data.url;
-            this.profileModel.saveChanges();
-          }
-        }
-      } else {
-        if (
-          !options.userId &&
-          this.profileModel &&
-          this.profileModel.user &&
-          this.profileModel.user.id
-        ) {
-          options.userId = this.profileModel.user.id;
-        }
-        if (!options.userId)
-          throw new Error("userId necessário quando useAuthUser=false");
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
 
-        url = `/files/upload?userId=${options.userId}`;
-        const resp = await this.apiClient.post(url, fd, config);
-        if (resp && resp.data && resp.data.url) {
-          this.updateUserData({ profilePicture: resp.data.url });
-          if (this.profileModel) {
-            this.profileModel.user.profilePicture = resp.data.url;
-            this.profileModel.saveChanges();
-          }
-        }
-      }
-    } catch (err) {
-      console.error("Erro no upload da imagem:", err);
+      await this.apiClient.post("files/upload/profile", fd, config);
+      alert("Foto de perfil atualizada com sucesso!");
+    } catch (error) {
+      console.error("Erro no upload da imagem:", error);
       alert("Falha ao enviar imagem. Tente novamente.");
-      // opcional: reverter preview para imagem antiga
-      if (this.profileModel) {
-        this.profileModel.revertChanges();
+
+      // Opcional: Recarregar a foto antiga do servidor se der erro
+      const fotoAntiga = await this.fetchFoto();
+      if (this.profileModel && this.profileModel.user) {
+        this.profileModel.user.profilePicture = fotoAntiga;
       }
     }
   }

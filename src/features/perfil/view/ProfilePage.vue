@@ -1,10 +1,8 @@
 <template>
-  <header>
-    <HeaderPage />
-  </header>
+  <HeaderPage />
 
-  <body>
-    <div class="profile-container">
+  <main class="profile-container">
+    <div>
       <div v-if="loading" class="profile-card-loading">
         <p>Carregando perfil...</p>
       </div>
@@ -24,7 +22,7 @@
               id="fotoPerfilUpload"
               type="file"
               accept="image/*"
-              @change="uploadfotoPerfil"
+              @change="uploadProfilePicture"
               style="display: none"
             />
           </div>
@@ -54,8 +52,18 @@
             <h3>Dados</h3>
             <div v-if="!isEditing">
               <p><strong>E-mail:</strong> {{ user.email }}</p>
+              <p><strong>Senha:</strong></p>
+              <p>
+                <strong>Data de nascimento:</strong>
+                {{ formatarData(user.dataNascimento) }}
+              </p>
+
               <p><strong>Telefone:</strong> {{ user.telefone }}</p>
-              <p><strong>Localização:</strong> {{ user.endereco }}</p>
+              <p><strong>Endereço:</strong> {{ user.endereco }}</p>
+              <p>
+                <strong>Cidade/Estado:</strong> {{ user.cidade }}-{{ user.uf }}
+              </p>
+
               <button @click="toggleEdit">Editar Dados</button>
             </div>
 
@@ -63,50 +71,85 @@
               <label for="email">E-mail:</label>
               <input type="email" id="email" v-model="user.email" />
 
-              <label for="phone">Telefone:</label>
-              <input type="text" id="phone" v-model="user.phone" />
+              <label for="senha">Senha:</label>
+              <input type="password" id="senha" v-model="novaSenha" />
 
-              <label for="location">Localização:</label>
-              <input type="text" id="location" v-model="user.location" />
+              <label for="location">Endereço:</label>
+              <input type="text" id="endereco" v-model="user.endereco" />
 
+              <label for="dataNascimento">Data de nascimento</label>
+              <input
+                type="date"
+                id="dataNascimento"
+                v-model="user.dataNascimento"
+              />
+
+              <label for="uf">Estado:</label>
+              <select
+                id="state"
+                class="state"
+                v-model="viewModel.selectedState"
+                @change="viewModel.fetchCities"
+              >
+                <option value="">UF</option>
+                <option
+                  v-for="state in viewModel.states"
+                  :key="state.sigla"
+                  :value="state.sigla"
+                >
+                  {{ state.nome }}
+                </option>
+              </select>
+
+              <label for="cidade">Cidade:</label
+              ><select id="city" class="city" v-model="viewModel.selectedCity">
+                <option value="">Cidade</option>
+                <option
+                  v-for="city in viewModel.cities"
+                  :key="city.nome"
+                  :value="city.nome"
+                >
+                  {{ city.nome }}
+                </option>
+              </select>
+              <br />
               <button @click="saveData">Salvar Dados</button>
               <button @click="cancelEdit">Cancelar</button>
             </div>
           </div>
         </div>
       </div>
-
-      <center>
-        <div class="service-card">
-          <div class="services">
-            <h3>Serviços</h3>
-            <div class="carousel">
-              <div class="carousel-track-container">
-                <button class="carousel-button prev" @click="prevSlide">
-                  &lt;
-                </button>
-                <div
-                  class="carousel-track"
-                  :style="{ transform: trackTransform }"
-                >
-                  <img
-                    v-for="(image, index) in images"
-                    :key="index"
-                    :src="image"
-                    alt="Serviço"
-                    class="carousel-image"
-                  />
-                </div>
-                <button class="carousel-button next" @click="nextSlide">
-                  &gt;
-                </button>
+    </div>
+    <center>
+      <div class="service-card">
+        <div class="services">
+          <h3>Serviços</h3>
+          <div class="carousel">
+            <div class="carousel-track-container">
+              <button class="carousel-button prev" @click="prevSlide">
+                &lt;
+              </button>
+              <div
+                class="carousel-track"
+                :style="{ transform: trackTransform }"
+              >
+                <img
+                  v-for="(image, index) in images"
+                  :key="index"
+                  :src="image"
+                  alt="Serviço"
+                  class="carousel-image"
+                />
               </div>
+              <button class="carousel-button next" @click="nextSlide">
+                &gt;
+              </button>
             </div>
           </div>
         </div>
-      </center>
-    </div>
-  </body>
+      </div>
+    </center>
+  </main>
 </template>
 
 <script>
@@ -120,10 +163,13 @@ export default {
   components: {
     HeaderPage,
   },
+  mounted() {
+    this.viewModel.fetchStates();
+  },
   setup() {
     const viewModel = reactive(new ProfileViewModel(userData));
     const loading = ref(true);
-
+    const novaSenha = ref("");
     const user = ref({
       id: null,
       nomeCompleto: "",
@@ -142,40 +188,75 @@ export default {
       if (fotoUrl) {
         user.value.profilePicture = fotoUrl;
       }
-      console.log(user.value.profilePicture);
       loading.value = false;
     });
 
+    const formatarData = (dataString) => {
+      if (!dataString) return "";
+      const data = new Date(dataString);
+      // Ajusta o timezone se necessário ou usa UTC dependendo de como grava
+      return data.toLocaleDateString("pt-BR");
+    };
+
     const saveData = async () => {
-      await viewModel.saveData();
-      // sincroniza user local com o profileModel atualizado
-      if (viewModel.profileModel) user.value = viewModel.profileModel.user;
+      const dadosParaEnviar = { ...user.value };
+      if (novaSenha.value) {
+        dadosParaEnviar.senha = novaSenha.value;
+      } else {
+        delete dadosParaEnviar.senha;
+      }
+      delete dadosParaEnviar.profilePicture;
+
+      const fotoAtualValida = user.value.profilePicture;
+
+      const sucesso = await viewModel.saveData(dadosParaEnviar);
+      if (sucesso && viewModel.profileModel) {
+        user.value = { ...viewModel.profileModel.user };
+        user.value.profilePicture = fotoAtualValida;
+        novaSenha.value = "";
+      }
+    };
+
+    const cancelEdit = () => {
+      const fotoAtualValida = user.value.profilePicture;
+
+      viewModel.cancelEdit();
+      if (viewModel.profileModel) {
+        user.value = { ...viewModel.profileModel.user };
+
+        user.value.profilePicture = fotoAtualValida;
+      }
+
+      novaSenha.value = "";
     };
 
     // torna isEditing reativo via computed que lê viewModel
     const isEditing = computed(() => viewModel.isEditing);
 
     const uploadProfilePicture = async (event) => {
+      // Pega o arquivo que o usuário selecionou
       const file = event.target.files[0];
+
+      // Validação simples de tamanho/tipo (opcional)
       if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        alert("Por favor, selecione um arquivo de imagem.");
+        return;
+      }
 
-      // aqui escolha a opção:
-      // se seu backend usa usuário logado:
-      await viewModel.uploadProfilePicture(file, { useAuthUser: true });
+      // Chama o método do ViewModel passando o arquivo direto
+      await viewModel.uploadProfilePicture(file);
 
-      // se seu backend espera userId:
-      // await viewModel.uploadProfilePicture(file, { useAuthUser: false, userId: user.value.id });
-
-      // atualiza user local com o que foi salvo no viewModel
+      // Sincroniza a view local com o model (para o preview aparecer)
       if (viewModel.profileModel) {
-        user.value = { ...viewModel.profileModel.user };
+        user.value.profilePicture = viewModel.profileModel.user.profilePicture;
       }
     };
-
     return {
       viewModel,
       loading,
       user,
+      novaSenha,
       isEditing,
       images: viewModel.getImages(),
       currentIndex: viewModel.getCurrentIndex(),
@@ -183,10 +264,11 @@ export default {
         () => `translateX(-${viewModel.getCurrentIndex() * 100}%)`
       ),
       saveData,
+      formatarData,
+      cancelEdit,
       toggleEdit: async () => {
         await viewModel.toggleEdit();
       },
-      cancelEdit: () => viewModel.cancelEdit(),
       nextSlide: () => viewModel.nextSlide(),
       prevSlide: () => viewModel.prevSlide(),
       uploadProfilePicture,
@@ -195,12 +277,16 @@ export default {
 };
 </script>
 <style>
-html,
-body {
-  height: 100%;
+main {
+  min-height: 100vh;
   margin: 0;
+  background: linear-gradient(
+    1.87deg,
+    rgba(2, 74, 89, 0.3) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
-body {
+main {
   overflow-y: scroll; /* Força a barra de rolagem vertical */
 }
 ::-webkit-scrollbar {
@@ -208,18 +294,15 @@ body {
   height: 0px; /* Para barra de rolagem horizontal */
 }
 .profile-container {
-  background: linear-gradient(
-    1.87deg,
-    rgba(2, 74, 89, 0.3) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
   height: 100%;
   width: 100%;
 }
 .profile-card {
+  min-height: 40vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0;
 }
 .picture-container {
   height: auto;
@@ -264,6 +347,8 @@ h3 {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
   width: 900px;
   height: auto;
+  min-height: 20vh;
+  margin: 0;
 }
 .service-card {
   justify-content: center;
