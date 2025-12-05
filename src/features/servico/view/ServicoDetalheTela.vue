@@ -19,8 +19,16 @@
             >
           </div>
           <div class="button-group">
-            <button class="avaliacoes-btn" @click="navigateToAvaliacoes">Ver Avaliações</button>
-            <button class="avaliar-btn" @click="navigateToAvaliar">Avaliar Serviço</button>
+            <button class="avaliacoes-btn" @click="navigateToAvaliacoes">
+              Ver Avaliações
+            </button>
+            <button
+              class="avaliar-btn"
+              @click="navigateToAvaliar"
+              v-if="isLoggedIn"
+            >
+              Avaliar Serviço
+            </button>
           </div>
         </div>
 
@@ -44,9 +52,18 @@
           </p>
         </div>
 
-        <button @click="contactViaWhatsapp" class="whatsapp-btn">
+        <button
+          @click="contactViaWhatsapp"
+          class="whatsapp-btn"
+          v-if="isLoggedIn"
+        >
           <img src="@/assets/whatsapp_icon.png" alt="WhatsApp" />
           Contratar via Whatsapp
+        </button>
+
+        <button class="whatsapp-btn" v-else>
+          <img src="@/assets/whatsapp_icon.png" alt="WhatsApp" />
+          Entre para contratar via WhatsApp
         </button>
       </div>
     </div>
@@ -64,15 +81,34 @@ export default {
   mixins: [ServicoDetalheModel],
   data() {
     return {
+      isLoggedIn: true,
       ...ServicoDetalheViewModel.data(),
     };
   },
+  mounted() {
+    this.checkLoginStatus();
+  },
+  watch: {
+    $route() {
+      this.checkLoginStatus();
+    },
+  },
   methods: {
+    checkLoginStatus() {
+      const token = localStorage.getItem("jwt_token");
+      this.isLoggedIn = !!token;
+    },
     navigateToAvaliacoes() {
-      this.$router.push({ name: 'avaliacoesServico', params: { id: this.servico.id } });
+      this.$router.push({
+        name: "avaliacoesServico",
+        params: { id: this.servico.id },
+      });
     },
     navigateToAvaliar() {
-      this.$router.push({ name: 'avaliarServico', params: { id: this.servico.id } });
+      this.$router.push({
+        name: "avaliarServico",
+        params: { id: this.servico.id },
+      });
     },
     async loadServiceDetails() {
       this.isLoading = true;
@@ -209,9 +245,9 @@ h1 {
 
 /* Novo estilo para o botão de avaliar serviço */
 .avaliar-btn {
-  background-color: #F26530;
+  background-color: #f26530;
   color: white;
-  border: 1px solid #F26530;
+  border: 1px solid #f26530;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   cursor: pointer;

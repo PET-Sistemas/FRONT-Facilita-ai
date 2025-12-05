@@ -3,11 +3,15 @@
   <main>
     <div class="evaluation-container">
       <div class="evaluation-card">
-        <router-link to="/inicial_tela" class="back-link">&lt; Voltar</router-link>
+        <router-link to="/" class="back-link">&lt; Voltar</router-link>
         <h1>Avaliar Serviço</h1>
-        
+
         <div class="service-info" v-if="servico">
-          <img :src="servico.prestador.foto || require('@/assets/placeholder.png')" alt="Foto do Prestador" class="provider-photo" />
+          <img
+            :src="servico.prestador.foto || require('@/assets/placeholder.png')"
+            alt="Foto do Prestador"
+            class="provider-photo"
+          />
           <div class="service-text">
             <span class="service-name">{{ servico.titulo }}</span>
             <span class="provider-name">{{ servico.prestador.nome }}</span>
@@ -17,26 +21,36 @@
         <div class="rating-section">
           <h2>Qualidade do Serviço</h2>
           <div class="stars" @mouseleave="resetHoverRating">
-            <span 
-              v-for="star in 5" 
+            <span
+              v-for="star in 5"
               :key="star"
               class="star"
-              :class="{ 'filled': star <= (hoverRating || rating) }"
+              :class="{ filled: star <= (hoverRating || rating) }"
               @mouseover="hoverRating = star"
               @click="setRating(star)"
-            >★</span>
+              >★</span
+            >
           </div>
         </div>
 
         <div class="description-section">
           <h2>Avaliação</h2>
-          <textarea v-model="avaliacaoDesc" placeholder="Escreva sua avaliação sobre o serviço..."></textarea>
+          <textarea
+            v-model="avaliacaoDesc"
+            placeholder="Escreva sua avaliação sobre o serviço..."
+          ></textarea>
         </div>
 
-        <button @click="submitEvaluation" class="submit-btn" :disabled="isSubmitting">
-          {{ isSubmitting ? 'Enviando...' : 'Enviar Avaliação' }}
+        <button
+          @click="submitEvaluation"
+          class="submit-btn"
+          :disabled="isSubmitting"
+        >
+          {{ isSubmitting ? "Enviando..." : "Enviar Avaliação" }}
         </button>
-        <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+        <p v-if="successMessage" class="success-message">
+          {{ successMessage }}
+        </p>
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
     </div>
@@ -44,11 +58,11 @@
 </template>
 
 <script>
-import HeaderPage from '@/components/header/HeaderPage.vue';
-import AvaliarServicoViewModel from '../viewmodel/AvaliarServicoViewModel';
+import HeaderPage from "@/components/header/HeaderPage.vue";
+import AvaliarServicoViewModel from "../viewmodel/AvaliarServicoViewModel";
 
 export default {
-  name: 'AvaliarServicoTela',
+  name: "AvaliarServicoTela",
   components: { HeaderPage },
   mixins: [AvaliarServicoViewModel],
 };
@@ -62,7 +76,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .evaluation-container {
@@ -79,7 +93,7 @@ main {
 }
 
 .back-link {
-  color: #F26530;
+  color: #f26530;
   text-decoration: none;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -125,7 +139,8 @@ h1 {
   color: #6c757d;
 }
 
-.rating-section, .description-section {
+.rating-section,
+.description-section {
   margin-bottom: 2rem;
 }
 
@@ -145,7 +160,7 @@ h2 {
 }
 
 .star.filled {
-  color: #F26530;
+  color: #f26530;
 }
 
 textarea {
@@ -154,13 +169,13 @@ textarea {
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #ced4da;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 1em;
   resize: vertical;
 }
 
 .submit-btn {
-  background-color: #F26530;
+  background-color: #f26530;
   color: white;
   border: none;
   padding: 1rem;
@@ -181,7 +196,8 @@ textarea {
   cursor: not-allowed;
 }
 
-.success-message, .error-message {
+.success-message,
+.error-message {
   text-align: center;
   margin-top: 1rem;
   font-weight: 500;

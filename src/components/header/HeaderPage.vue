@@ -3,7 +3,7 @@
     <router-link to="/">
       <img src="@/assets/logo.png" alt="Logo Facilita aí" id="logo" />
     </router-link>
-    <div class="main-content">
+    <div class="main-content" v-if="isHomePage">
       <div class="search-input">
         <div class="search-container">
           <input
@@ -20,7 +20,6 @@
     <div class="header-right">
       <div v-if="isLoggedIn" class="user-menu-container">
         <svg
-          @click="toggleDropdown"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="40"
@@ -50,6 +49,11 @@ export default {
       searchTerm: "",
       isLoggedIn: false,
     };
+  },
+  computed: {
+    isHomePage() {
+      return this.$route.path === "/";
+    },
   },
   mounted() {
     this.checkLoginStatus();
