@@ -14,6 +14,8 @@ const AvaliacoesTela = () =>
   import("../features/listaAvaliacoes/view/AvaliacoesTela.vue");
 const AvaliarServicoTela = () =>
   import("../features/avaliarServico/view/AvaliarServicoTela.vue");
+const EsqueciSenha = () => import("../features/esqueciSenha/view/HomePage.vue");
+const ResetarSenha = () => import("../features/resetarSenha/view/HomePage.vue");
 
 // Obter a URL base a partir da variável de ambiente
 const baseUrl = process.env.VUE_APP_BASE_URL || "/";
@@ -66,6 +68,16 @@ const router = createRouter({
       component: AvaliarServicoTela,
       props: true,
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/esqueci-senha",
+      name: "esqueciSenha",
+      component: EsqueciSenha,
+    },
+    {
+      path: "/resetar-senha",
+      name: "resetarSenha",
+      component: ResetarSenha,
     },
   ],
 });

@@ -30,24 +30,12 @@
 
         <div class="profile-header">
           <div class="title">{{ user.nomeCompleto }}</div>
-          <p class="type">Prestador de Serviço</p>
-
-          <div class="stars">
-            <!-- proteção contra undefined -->
-            <span
-              v-for="n in user.stars || 0"
-              :key="'filled-' + n"
-              class="star filled"
-              >★</span
-            >
-            <span
-              v-for="n in 5 - (user.stars || 0)"
-              :key="'empty-' + n"
-              class="star"
-              >★</span
-            >
+          <div
+            class="stars"
+            :title="'Nota Geral: ' + (user.mediaAvaliacoes || 0).toFixed(1)"
+          >
+            {{ getStarRating(user.mediaAvaliacoes) }}
           </div>
-
           <div class="profile-info">
             <h3>Dados</h3>
             <div v-if="!isEditing">
@@ -163,6 +151,21 @@ export default {
   components: {
     HeaderPage,
   },
+  methods: {
+    getStarRating(media) {
+      if (!media) return "☆☆☆☆☆";
+
+      const totalStars = 5;
+      const fullStars = Math.floor(media);
+      const decimal = media % 1;
+      const halfStar = decimal >= 0.25 && decimal < 0.75 ? 1 : 0;
+      const emptyStars = Math.max(0, totalStars - fullStars - halfStar);
+
+      return (
+        "★".repeat(fullStars) + (halfStar ? "½" : "") + "☆".repeat(emptyStars)
+      );
+    },
+  },
   mounted() {
     this.viewModel.fetchStates();
   },
@@ -194,7 +197,6 @@ export default {
     const formatarData = (dataString) => {
       if (!dataString) return "";
       const data = new Date(dataString);
-      // Ajusta o timezone se necessário ou usa UTC dependendo de como grava
       return data.toLocaleDateString("pt-BR");
     };
 
@@ -230,24 +232,19 @@ export default {
       novaSenha.value = "";
     };
 
-    // torna isEditing reativo via computed que lê viewModel
     const isEditing = computed(() => viewModel.isEditing);
 
     const uploadProfilePicture = async (event) => {
-      // Pega o arquivo que o usuário selecionou
       const file = event.target.files[0];
 
-      // Validação simples de tamanho/tipo (opcional)
       if (!file) return;
       if (!file.type.startsWith("image/")) {
         alert("Por favor, selecione um arquivo de imagem.");
         return;
       }
 
-      // Chama o método do ViewModel passando o arquivo direto
       await viewModel.uploadProfilePicture(file);
 
-      // Sincroniza a view local com o model (para o preview aparecer)
       if (viewModel.profileModel) {
         user.value.profilePicture = viewModel.profileModel.user.profilePicture;
       }
@@ -397,8 +394,10 @@ h3 {
   outline: none;
 }
 .stars {
-  display: flex;
-  margin-bottom: 10%;
+  color: #f26530;
+  font-size: 2rem;
+  margin: 10px 0;
+  letter-spacing: 3px;
 }
 .star {
   font-size: 2rem;

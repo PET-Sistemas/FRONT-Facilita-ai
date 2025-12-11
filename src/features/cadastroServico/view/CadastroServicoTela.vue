@@ -50,7 +50,7 @@
               id="price"
               type="text"
               v-model.lazy="valor"
-              v-money="moneyConfig"
+              v-money3="moneyConfig"
               placeholder="R$ 0,00"
               required
             />
