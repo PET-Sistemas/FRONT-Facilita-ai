@@ -19,7 +19,7 @@ const redefinir = async () => {
     return;
   }
 
-  if (this.senha.length < 8) {
+  if (novaSenha.value.length < 8) {
     alert("Senha deve ter pelo menos 8 caracteres.");
     return;
   }
