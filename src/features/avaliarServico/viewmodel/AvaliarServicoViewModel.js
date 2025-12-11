@@ -48,7 +48,7 @@ export default {
               name: "servicoDetalhe",
               params: { id: servicoId },
             }),
-          2000
+          200
         );
       } catch (error) {
         this.errorMessage = "Falha ao enviar avaliação. Tente novamente.";

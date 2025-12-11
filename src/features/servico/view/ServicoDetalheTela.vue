@@ -11,12 +11,16 @@
 
         <div class="rating-container">
           <div class="rating-display">
-            <span class="stars">{{
-              getStarRating(servico.prestador.mediaAvaliacoes)
-            }}</span>
-            <span class="rating-feedback"
-              >({{ servico.prestador.totalAvaliacoes }} avaliações)</span
+            <span
+              class="stars"
+              :title="'Nota: ' + (servico.mediaAvaliacoes || 0).toFixed(1)"
             >
+              {{ getStarRating(servico.mediaAvaliacoes) }}
+            </span>
+
+            <span class="rating-feedback">
+              ({{ servico.totalAvaliacoes || 0 }} avaliações)
+            </span>
           </div>
           <div class="button-group">
             <button class="avaliacoes-btn" @click="navigateToAvaliacoes">
@@ -81,7 +85,9 @@ export default {
   mixins: [ServicoDetalheModel],
   data() {
     return {
-      isLoggedIn: true,
+      isLoggedIn: false,
+      error: null,
+      servico: null,
       ...ServicoDetalheViewModel.data(),
     };
   },
@@ -89,7 +95,10 @@ export default {
     this.checkLoginStatus();
   },
   watch: {
-    $route() {
+    $route(to, from) {
+      if (to.params.id !== from.params.id) {
+        this.loadServiceDetails();
+      }
       this.checkLoginStatus();
     },
   },
@@ -97,6 +106,19 @@ export default {
     checkLoginStatus() {
       const token = localStorage.getItem("jwt_token");
       this.isLoggedIn = !!token;
+    },
+    async loadServiceDetails() {
+      this.error = null;
+      try {
+        const serviceId = this.$route.params.id;
+        this.servico = await this.fetchServiceDetails(serviceId);
+        console.log("Dados do Serviço recebidos:", this.servico);
+      } catch (err) {
+        this.error = "Não foi possível carregar os detalhes do serviço.";
+        console.error("Erro ao carregar serviço:", err);
+      } finally {
+        this.isLoading = false;
+      }
     },
     navigateToAvaliacoes() {
       this.$router.push({
@@ -110,18 +132,6 @@ export default {
         params: { id: this.servico.id },
       });
     },
-    async loadServiceDetails() {
-      this.isLoading = true;
-      try {
-        const serviceId = this.$route.params.id;
-        this.servico = await this.fetchServiceDetails(serviceId);
-      } catch (err) {
-        this.error = "Não foi possível carregar os detalhes do serviço.";
-        console.error(err);
-      } finally {
-        this.isLoading = false;
-      }
-    },
     contactViaWhatsapp() {
       if (this.servico && this.servico.prestador.telefoneWhatsapp) {
         const message = `Olá, ${this.servico.prestador.nome}. Vi seu serviço "${this.servico.titulo}" no Facilita Aí e gostaria de mais informações.`;
@@ -133,10 +143,15 @@ export default {
       }
     },
     getStarRating(media) {
+      if (!media) return "☆☆☆☆☆";
+
       const totalStars = 5;
-      const fullStars = Math.floor(media);
-      const halfStar = media % 1 >= 0.5 ? 1 : 0;
-      const emptyStars = totalStars - fullStars - halfStar;
+      const fullStars = Math.floor(media); // Ex: 4.7 -> 4
+
+      const decimal = media % 1;
+      const halfStar = decimal >= 0.25 && decimal < 0.75 ? 1 : 0;
+      const emptyStars = Math.max(0, totalStars - fullStars - halfStar);
+
       return (
         "★".repeat(fullStars) + (halfStar ? "½" : "") + "☆".repeat(emptyStars)
       );

@@ -16,7 +16,7 @@ const { email, password, handleLogin, errorMessage, isShaking } =
     <div class="password-field">
       <label for="password">Senha</label>
       <input type="password" id="password" v-model="password" placeholder="" />
-      <RouterLink to="/recover">
+      <RouterLink to="/esqueci-senha">
         <a id="forgot-password" href="/">Esqueci a senha</a>
       </RouterLink>
     </div>
